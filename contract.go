@@ -3,7 +3,6 @@ package httpclient
 import (
 	"context"
 	"encoding/json"
-	"io"
 	"time"
 
 	"github.com/ipfs/go-cid"
@@ -17,21 +16,20 @@ type ContractAPI Client
 // for handle subscription data
 type InviteSubscription interface {
 	Next() (InviteResponse, error)
-	Cancel()
+	Cancel() error
 }
 
 // UpdatesSubscription interface represent basic func
 // for handle subscription data
 type UpdatesSubscription interface {
 	Next() (UpdatesResponse, error)
-	Cancel()
+	Cancel() error
 }
 
 // subscriptionResponse state for handle subscriptions
 type subscriptionResponse struct {
-	ctx        context.Context
-	reader     io.ReadCloser
-	cancelFunc context.CancelFunc
+	ctx    context.Context
+	reader *Response
 }
 
 // UpdatesResponse with subscription funcs
@@ -99,8 +97,8 @@ func (api *ContractAPI) Updates(ctx context.Context, id cid.Cid) (UpdatesSubscri
 	if err != nil {
 		return out, err
 	}
-	out.ctx, out.cancelFunc = context.WithCancel(ctx)
-	out.reader = resp.Output
+	out.ctx = ctx
+	out.reader = resp
 	return out, err
 }
 
@@ -112,8 +110,8 @@ func (api *ContractAPI) Invites(ctx context.Context) (InviteSubscription, error)
 	if err != nil {
 		return out, err
 	}
-	out.ctx, out.cancelFunc = context.WithCancel(ctx)
-	out.reader = resp.Output
+	out.ctx = ctx
+	out.reader = resp
 	return out, err
 }
 
@@ -146,22 +144,22 @@ func (api *ContractAPI) client() *Client {
 
 // Next subscription event
 func (di InviteResponse) Next() (InviteResponse, error) {
-	err := json.NewDecoder(di.reader).Decode(di)
+	err := json.NewDecoder(di.reader.Output).Decode(di)
 	return di, err
 }
 
 // Cancel subscription listening
-func (di InviteResponse) Cancel() {
-	di.cancelFunc()
+func (di InviteResponse) Cancel() error {
+	return di.reader.Cancel()
 }
 
 // Next subscription event
 func (cr UpdatesResponse) Next() (UpdatesResponse, error) {
-	err := json.NewDecoder(cr.reader).Decode(cr)
+	err := json.NewDecoder(cr.reader.Output).Decode(cr)
 	return cr, err
 }
 
 // Cancel subscription listening
-func (cr UpdatesResponse) Cancel() {
-	cr.cancelFunc()
+func (cr UpdatesResponse) Cancel() error {
+	return cr.reader.Cancel()
 }
