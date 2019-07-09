@@ -29,7 +29,7 @@ func NewWithClient(url string, http *http.Client) (*Client, error) {
 	return client, nil
 }
 
-func (api *Client) Request(command string, args ...string) RequestBuilder {
+func (api *Client) NewRequest(command string) RequestBuilder {
 	headers := make(map[string]string)
 	if api.Headers != nil {
 		for k := range api.Headers {
@@ -39,7 +39,6 @@ func (api *Client) Request(command string, args ...string) RequestBuilder {
 
 	return &requestBuilder{
 		command: command,
-		args:    args,
 		client:  api,
 		headers: headers,
 	}
