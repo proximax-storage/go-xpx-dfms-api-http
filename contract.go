@@ -67,7 +67,7 @@ type listContractResponse struct {
 // Get Contract request
 func (api *ContractAPI) Get(ctx context.Context, id cid.Cid) (*ContractResponse, error) {
 	out := &ContractResponse{}
-	err := api.client().Request("contract/get").
+	err := api.client().NewRequest("contract/get").
 		Arguments(id.String()).
 		Exec(ctx, out)
 	return out, err
@@ -75,7 +75,7 @@ func (api *ContractAPI) Get(ctx context.Context, id cid.Cid) (*ContractResponse,
 
 // Join Contract request
 func (api *ContractAPI) Join(ctx context.Context, id cid.Cid) error {
-	return api.client().Request("contract/join").
+	return api.client().NewRequest("contract/join").
 		Arguments(id.String()).
 		Exec(ctx, nil)
 }
@@ -83,7 +83,7 @@ func (api *ContractAPI) Join(ctx context.Context, id cid.Cid) error {
 // List Contracts request
 func (api *ContractAPI) List(ctx context.Context) ([]cid.Cid, error) {
 	out := &listContractResponse{}
-	err := api.client().Request("contract/list").
+	err := api.client().NewRequest("contract/list").
 		Exec(ctx, out)
 	return out.Cids, err
 }
@@ -91,7 +91,7 @@ func (api *ContractAPI) List(ctx context.Context) ([]cid.Cid, error) {
 // Updates subscription Contract request listener
 func (api *ContractAPI) Updates(ctx context.Context, id cid.Cid) (UpdatesSubscription, error) {
 	out := UpdatesResponse{}
-	resp, err := api.client().Request("contract/updates").
+	resp, err := api.client().NewRequest("contract/updates").
 		Arguments(id.String()).
 		Send(ctx)
 	if err != nil {
@@ -105,7 +105,7 @@ func (api *ContractAPI) Updates(ctx context.Context, id cid.Cid) (UpdatesSubscri
 // Invites subscription Contract request listener
 func (api *ContractAPI) Invites(ctx context.Context) (InviteSubscription, error) {
 	out := InviteResponse{}
-	resp, err := api.client().Request("contract/invites").
+	resp, err := api.client().NewRequest("contract/invites").
 		Send(ctx)
 	if err != nil {
 		return out, err
@@ -118,7 +118,7 @@ func (api *ContractAPI) Invites(ctx context.Context) (InviteSubscription, error)
 // Compose Contract request
 func (api *ContractAPI) Compose(ctx context.Context, space uint64, duration time.Duration) (*ContractResponse, error) {
 	out := &ContractResponse{}
-	err := api.client().Request("contract/compose").
+	err := api.client().NewRequest("contract/compose").
 		Arguments(string(space)).
 		Arguments(string(duration)).
 		Exec(ctx, out)
@@ -127,13 +127,13 @@ func (api *ContractAPI) Compose(ctx context.Context, space uint64, duration time
 
 // StartAccepting Contract request
 func (api *ContractAPI) StartAccepting(ctx context.Context) error {
-	return api.client().Request("contract/start-accepting").
+	return api.client().NewRequest("contract/start-accepting").
 		Exec(ctx, nil)
 }
 
 // StopAccepting Contract request
 func (api *ContractAPI) StopAccepting(ctx context.Context) error {
-	return api.client().Request("contract/stop-accepting").
+	return api.client().NewRequest("contract/stop-accepting").
 		Exec(ctx, nil)
 }
 
