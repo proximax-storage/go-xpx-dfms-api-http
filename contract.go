@@ -2,6 +2,8 @@ package httpclient
 
 import (
 	"context"
+	"encoding/json"
+	"io"
 	"time"
 
 	"github.com/ipfs/go-cid"
@@ -10,7 +12,20 @@ import (
 
 type ContractAPI Client
 
+type InviteSubscription interface {
+	Next() (DriveInvite, error)
+	//	Cancel()
+}
+
+type UpdateSubscription interface {
+	Next() (ContractResponse, error)
+	//	Cancel()
+}
+
 type DriveInvite struct {
+	ctx    context.Context
+	reader io.ReadCloser
+
 	Cid           cid.Cid
 	Created       time.Time
 	Duration      time.Duration
@@ -19,6 +34,9 @@ type DriveInvite struct {
 }
 
 type ContractResponse struct {
+	ctx    context.Context
+	reader io.ReadCloser
+
 	Cid        cid.Cid
 	Owner      peer.ID
 	Members    []peer.ID
@@ -26,6 +44,10 @@ type ContractResponse struct {
 	Created    time.Time
 	Root       cid.Cid
 	TotalSpace uint64
+}
+
+type listContractResponse struct {
+	Cids []cid.Cid
 }
 
 func (api *ContractAPI) Get(ctx context.Context, id cid.Cid) (*ContractResponse, error) {
@@ -49,11 +71,15 @@ func (api *ContractAPI) List(ctx context.Context) ([]cid.Cid, error) {
 	return out.Cids, err
 }
 
-func (api *ContractAPI) Updates(ctx context.Context, id cid.Cid) (*ContractResponse, error) {
-	out := &ContractResponse{}
-	err := api.client().Request("contract/updates").
+func (api *ContractAPI) Updates(ctx context.Context, id cid.Cid) (UpdateSubscription, error) {
+	out := ContractResponse{}
+	resp, err := api.client().Request("contract/updates").
 		Arguments(id.String()).
-		Exec(ctx, out)
+		Send(ctx)
+	if err != nil {
+		return out, err
+	}
+	out.reader = resp.Output
 	return out, err
 }
 
@@ -66,10 +92,14 @@ func (api *ContractAPI) Compose(ctx context.Context, space uint64, duration time
 	return out, err
 }
 
-func (api *ContractAPI) Invites(ctx context.Context) (*DriveInvite, error) {
-	out := &DriveInvite{}
-	err := api.client().Request("contract/invites").
-		Exec(ctx, out)
+func (api *ContractAPI) Invites(ctx context.Context) (InviteSubscription, error) {
+	out := DriveInvite{}
+	resp, err := api.client().Request("contract/invites").
+		Send(ctx)
+	if err != nil {
+		return out, err
+	}
+	out.reader = resp.Output
 	return out, err
 }
 
@@ -87,10 +117,23 @@ func (api *ContractAPI) client() *Client {
 	return (*Client)(api)
 }
 
-type getContractResponse struct {
-	Cid string
+func (di DriveInvite) Next() (DriveInvite, error) {
+	err := json.NewDecoder(di.reader).Decode(di)
+	return di, err
 }
 
-type listContractResponse struct {
-	Cids []cid.Cid
+/*
+func (di DriveInvite) Cancel() {
+
 }
+*/
+func (cr ContractResponse) Next() (ContractResponse, error) {
+	err := json.NewDecoder(cr.reader).Decode(cr)
+	return cr, err
+}
+
+/*
+func (cr ContractResponse) Cancel() {
+
+}
+*/
