@@ -35,7 +35,7 @@ func (ref *FileInfo) ModTime() time.Time {
 }
 
 func (ref *FileInfo) IsDir() bool {
-	return ref.stat.Type == "dir" // Taken from MFS
+	return ref.stat.Type == "dir"
 }
 
 func (ref *FileInfo) Sys() interface{} {

@@ -11,12 +11,10 @@ import (
 type DriveAPI Client
 
 func (api *DriveAPI) Add(ctx context.Context, id cid.Cid, path string, file files.Node) (cid.Cid, error) {
-	req := api.client().Request("drive/add").
+	req := api.client().NewRequest("drive/add").
 		Arguments(id.String()).
-		Arguments(path)
-
-	d := files.NewMapDirectory(map[string]files.Node{"": file}) // unwrapped on the other side inside commands
-	req.Body(files.NewMultiFileReader(d, false))
+		Arguments(path).
+		FileBody(file)
 
 	out := &addResponse{}
 	err := req.Exec(ctx, out)
@@ -27,15 +25,24 @@ func (api *DriveAPI) Add(ctx context.Context, id cid.Cid, path string, file file
 	return cid.Decode(out.Cid)
 }
 
+func (api *DriveAPI) Get(ctx context.Context, id cid.Cid, path string) (files.Node, error) {
+	info, err := api.Stat(ctx, id, path)
+	if err != nil {
+		return nil, err
+	}
+
+	return api.newNode(ctx, id, path, info)
+}
+
 func (api *DriveAPI) Remove(ctx context.Context, id cid.Cid, path string) error {
-	return api.client().Request("drive/remove").
+	return api.client().NewRequest("drive/remove").
 		Arguments(id.String()).
 		Arguments(path).
 		Exec(ctx, nil)
 }
 
 func (api *DriveAPI) Move(ctx context.Context, id cid.Cid, src string, dst string) error {
-	return api.client().Request("drive/mv").
+	return api.client().NewRequest("drive/mv").
 		Arguments(id.String()).
 		Arguments(src).
 		Arguments(dst).
@@ -43,7 +50,7 @@ func (api *DriveAPI) Move(ctx context.Context, id cid.Cid, src string, dst strin
 }
 
 func (api *DriveAPI) Copy(ctx context.Context, id cid.Cid, src string, dst string) error {
-	return api.client().Request("drive/cp").
+	return api.client().NewRequest("drive/cp").
 		Arguments(id.String()).
 		Arguments(src).
 		Arguments(dst).
@@ -51,7 +58,7 @@ func (api *DriveAPI) Copy(ctx context.Context, id cid.Cid, src string, dst strin
 }
 
 func (api *DriveAPI) MakeDir(ctx context.Context, id cid.Cid, path string) error {
-	return api.client().Request("drive/mkdir").
+	return api.client().NewRequest("drive/mkdir").
 		Arguments(id.String()).
 		Arguments(path).
 		Exec(ctx, nil)
@@ -59,7 +66,7 @@ func (api *DriveAPI) MakeDir(ctx context.Context, id cid.Cid, path string) error
 
 func (api *DriveAPI) Ls(ctx context.Context, id cid.Cid, path string) ([]os.FileInfo, error) {
 	out := &lsResponse{}
-	err := api.client().Request("drive/ls").
+	err := api.client().NewRequest("drive/ls").
 		Arguments(id.String()).
 		Arguments(path).
 		Exec(ctx, out)
@@ -68,7 +75,7 @@ func (api *DriveAPI) Ls(ctx context.Context, id cid.Cid, path string) ([]os.File
 
 func (api *DriveAPI) Stat(ctx context.Context, id cid.Cid, path string) (os.FileInfo, error) {
 	out := &statResponse{}
-	err := api.client().Request("drive/stat").
+	err := api.client().NewRequest("drive/stat").
 		Arguments(id.String()).
 		Arguments(path).
 		Exec(ctx, out)
@@ -76,7 +83,7 @@ func (api *DriveAPI) Stat(ctx context.Context, id cid.Cid, path string) (os.File
 }
 
 func (api *DriveAPI) Flush(ctx context.Context, id cid.Cid, path string) error {
-	return api.client().Request("drive/flush").
+	return api.client().NewRequest("drive/flush").
 		Arguments(id.String()).
 		Arguments(path).
 		Exec(ctx, nil)

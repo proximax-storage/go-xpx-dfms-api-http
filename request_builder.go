@@ -5,7 +5,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"strconv"
 	"strings"
 
@@ -17,7 +16,7 @@ type RequestBuilder interface {
 	BodyString(body string) RequestBuilder
 	BodyBytes(body []byte) RequestBuilder
 	Body(body io.Reader) RequestBuilder
-	FileBody(body io.Reader) RequestBuilder
+	FileBody(file files.Node) RequestBuilder
 	Option(key string, value interface{}) RequestBuilder
 	Header(name, value string) RequestBuilder
 	Send(ctx context.Context) (*Response, error)
@@ -57,11 +56,9 @@ func (r *requestBuilder) Body(body io.Reader) RequestBuilder {
 }
 
 // FileBody sets the request body to the given reader wrapped into multipartreader.
-func (r *requestBuilder) FileBody(body io.Reader) RequestBuilder {
-	pr, _ := files.NewReaderPathFile("/dev/stdin", ioutil.NopCloser(body), nil)
-	d := files.NewMapDirectory(map[string]files.Node{"": pr})
+func (r *requestBuilder) FileBody(file files.Node) RequestBuilder {
+	d := files.NewMapDirectory(map[string]files.Node{"": file}) // unwrapped on the other side inside commands
 	r.body = files.NewMultiFileReader(d, false)
-
 	return r
 }
 
@@ -97,7 +94,6 @@ func (r *requestBuilder) Header(name, value string) RequestBuilder {
 
 // Send sends the request and return the response.
 func (r *requestBuilder) Send(ctx context.Context) (*Response, error) {
-
 	req := NewRequest(ctx, r.client.url, r.command, r.args...)
 	req.Opts = r.opts
 	req.Headers = r.headers
