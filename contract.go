@@ -10,22 +10,33 @@ import (
 	"github.com/libp2p/go-libp2p-core/peer"
 )
 
+// ContractAPI basic Contract Client representation
 type ContractAPI Client
 
+// InviteSubscription interface represent basic func
+// for handle subscription data
 type InviteSubscription interface {
-	Next() (DriveInvite, error)
-	//	Cancel()
+	Next() (InviteResponse, error)
+	Cancel()
 }
 
-type UpdateSubscription interface {
-	Next() (ContractResponse, error)
-	//	Cancel()
+// UpdatesSubscription interface represent basic func
+// for handle subscription data
+type UpdatesSubscription interface {
+	Next() (UpdatesResponse, error)
+	Cancel()
 }
 
-type DriveInvite struct {
-	ctx    context.Context
-	reader io.ReadCloser
+// subscriptionResponse state for handle subscriptions
+type subscriptionResponse struct {
+	ctx        context.Context
+	reader     io.ReadCloser
+	cancelFunc context.CancelFunc
+}
 
+// UpdatesResponse with subscription funcs
+type InviteResponse struct {
+	subscriptionResponse
 	Cid           cid.Cid
 	Created       time.Time
 	Duration      time.Duration
@@ -33,10 +44,14 @@ type DriveInvite struct {
 	Owner         peer.ID
 }
 
-type ContractResponse struct {
-	ctx    context.Context
-	reader io.ReadCloser
+// UpdatesResponse with subscription funcs
+type UpdatesResponse struct {
+	subscriptionResponse
+	ContractResponse
+}
 
+// ContractResponse common contract data struct
+type ContractResponse struct {
 	Cid        cid.Cid
 	Owner      peer.ID
 	Members    []peer.ID
@@ -46,10 +61,12 @@ type ContractResponse struct {
 	TotalSpace uint64
 }
 
+// listContractResponse list contract response data
 type listContractResponse struct {
 	Cids []cid.Cid
 }
 
+// Get Contract request
 func (api *ContractAPI) Get(ctx context.Context, id cid.Cid) (*ContractResponse, error) {
 	out := &ContractResponse{}
 	err := api.client().Request("contract/get").
@@ -58,12 +75,14 @@ func (api *ContractAPI) Get(ctx context.Context, id cid.Cid) (*ContractResponse,
 	return out, err
 }
 
+// Join Contract request
 func (api *ContractAPI) Join(ctx context.Context, id cid.Cid) error {
 	return api.client().Request("contract/join").
 		Arguments(id.String()).
 		Exec(ctx, nil)
 }
 
+// List Contracts request
 func (api *ContractAPI) List(ctx context.Context) ([]cid.Cid, error) {
 	out := &listContractResponse{}
 	err := api.client().Request("contract/list").
@@ -71,18 +90,34 @@ func (api *ContractAPI) List(ctx context.Context) ([]cid.Cid, error) {
 	return out.Cids, err
 }
 
-func (api *ContractAPI) Updates(ctx context.Context, id cid.Cid) (UpdateSubscription, error) {
-	out := ContractResponse{}
+// Updates subscription Contract request listener
+func (api *ContractAPI) Updates(ctx context.Context, id cid.Cid) (UpdatesSubscription, error) {
+	out := UpdatesResponse{}
 	resp, err := api.client().Request("contract/updates").
 		Arguments(id.String()).
 		Send(ctx)
 	if err != nil {
 		return out, err
 	}
+	out.ctx, out.cancelFunc = context.WithCancel(ctx)
 	out.reader = resp.Output
 	return out, err
 }
 
+// Invites subscription Contract request listener
+func (api *ContractAPI) Invites(ctx context.Context) (InviteSubscription, error) {
+	out := InviteResponse{}
+	resp, err := api.client().Request("contract/invites").
+		Send(ctx)
+	if err != nil {
+		return out, err
+	}
+	out.ctx, out.cancelFunc = context.WithCancel(ctx)
+	out.reader = resp.Output
+	return out, err
+}
+
+// Compose Contract request
 func (api *ContractAPI) Compose(ctx context.Context, space uint64, duration time.Duration) (*ContractResponse, error) {
 	out := &ContractResponse{}
 	err := api.client().Request("contract/compose").
@@ -92,48 +127,41 @@ func (api *ContractAPI) Compose(ctx context.Context, space uint64, duration time
 	return out, err
 }
 
-func (api *ContractAPI) Invites(ctx context.Context) (InviteSubscription, error) {
-	out := DriveInvite{}
-	resp, err := api.client().Request("contract/invites").
-		Send(ctx)
-	if err != nil {
-		return out, err
-	}
-	out.reader = resp.Output
-	return out, err
-}
-
+// StartAccepting Contract request
 func (api *ContractAPI) StartAccepting(ctx context.Context) error {
 	return api.client().Request("contract/start-accepting").
 		Exec(ctx, nil)
 }
 
+// StopAccepting Contract request
 func (api *ContractAPI) StopAccepting(ctx context.Context) error {
 	return api.client().Request("contract/stop-accepting").
 		Exec(ctx, nil)
 }
 
+// client - init Contract Client
 func (api *ContractAPI) client() *Client {
 	return (*Client)(api)
 }
 
-func (di DriveInvite) Next() (DriveInvite, error) {
+// Next subscription event
+func (di InviteResponse) Next() (InviteResponse, error) {
 	err := json.NewDecoder(di.reader).Decode(di)
 	return di, err
 }
 
-/*
-func (di DriveInvite) Cancel() {
-
+// Cancel subscription listening
+func (di InviteResponse) Cancel() {
+	di.cancelFunc()
 }
-*/
-func (cr ContractResponse) Next() (ContractResponse, error) {
+
+// Next subscription event
+func (cr UpdatesResponse) Next() (UpdatesResponse, error) {
 	err := json.NewDecoder(cr.reader).Decode(cr)
 	return cr, err
 }
 
-/*
-func (cr ContractResponse) Cancel() {
-
+// Cancel subscription listening
+func (cr UpdatesResponse) Cancel() {
+	cr.cancelFunc()
 }
-*/
