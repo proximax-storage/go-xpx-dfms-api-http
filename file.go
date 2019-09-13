@@ -82,7 +82,7 @@ func (d *dir) Close() error {
 type dirIter struct {
 	*dir
 
-	i    uint
+	i    int
 	node files.Node
 	err  error
 }
@@ -109,7 +109,7 @@ func (di *dirIter) Next() bool {
 		return false
 	}
 
-	l := uint(len(di.infos))
+	l := len(di.infos)
 	if l == 0 || di.i == l {
 		return false
 	}
