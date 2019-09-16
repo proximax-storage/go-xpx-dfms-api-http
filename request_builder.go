@@ -1,4 +1,4 @@
-package httpclient
+package client
 
 import (
 	"bytes"
@@ -94,7 +94,7 @@ func (r *requestBuilder) Header(name, value string) RequestBuilder {
 
 // Send sends the request and return the response.
 func (r *requestBuilder) Send(ctx context.Context) (*Response, error) {
-	req := NewRequest(ctx, r.client.url, r.command, r.args...)
+	req := NewRequest(ctx, r.client.address, r.command, r.args...)
 	req.Opts = r.opts
 	req.Headers = r.headers
 	req.Body = r.body
