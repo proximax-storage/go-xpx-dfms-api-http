@@ -5,17 +5,19 @@
 [![proximax](https://img.shields.io/badge/project-ProximaX-orange)](https://www.proximax.io/)
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/proximax-storage/go-xpx-dfms-http-client)
 
-> The Client's API is experimental an may change often. 
-> It is not recommended to fully rely on it.
+> *The Client's API is experimental and can often change.*
+>
+> **Current status**: under active development 
 
 Welcome to DFMS! 
 
-The package is a HTTP client for all DFMS's applications. It gives an ability to 
+The package is the HTTP client for all DFMS's applications. It gives an ability to 
 operate DFMS(Clients) and DFMSR(Replicators) nodes remotely through a generic API.
 
 ## Table of Contents
 
 - [Background](#background)
+- [Requirements](#requirements)
 - [Install](#install)
 - [Usage](#usage)
 - [API](#api)
@@ -26,10 +28,14 @@ operate DFMS(Clients) and DFMSR(Replicators) nodes remotely through a generic AP
 ## Background
 
 DFMS(Decentralized File Management System) - is a new advanced technology 
-developed by [ProximaX](https://www.proximax.io/) which represents the Storage Layer of the platform. 
+developed by [ProximaX](https://www.proximax.io/) which represents the Storage Layer of ProximaX infrastructure platform solution. 
 
-DFMS provides ann easy-to-use decentralized market of disk space using the Blockchain and the DLT
+DFMS provides an easy-to-use decentralized market of disk space using the Blockchain and the DLT
 powdered with cryptography magic. 
+
+## Requirements
+
+    go version 1.12 or higher
 
 ## Install
 
