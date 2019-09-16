@@ -72,3 +72,5 @@ TODO
 Feel free to dive in! [Open an issue](https://github.com/proximax-storage/go-xpx-dfms-http-client/issues/new) or submit PRs.
 
 ## License
+
+[Apache 2.0](LICENSE) © 2019 ProximaX Limited
