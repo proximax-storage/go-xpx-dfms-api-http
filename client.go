@@ -1,4 +1,4 @@
-package httpclient
+package client
 
 import (
 	"net/http"
@@ -8,38 +8,48 @@ var (
 	APIPath = "/api/v1"
 )
 
+// Client is an entry point for communication with DFMS applications
 type Client struct {
-	url  string
-	http http.Client
+	address string
+	http    http.Client
 
 	Headers http.Header
 }
 
-func New(url string) (*Client, error) {
-	return NewWithClient(url, http.DefaultClient)
+// New creates new Client from given address and default http.Client
+func New(address string) *Client {
+	return NewWithClient(address, http.DefaultClient)
 }
 
-func NewWithClient(url string, http *http.Client) (*Client, error) {
-	client := &Client{
-		url:     url,
+// New creates new Client from address and custom http.Client
+func NewWithClient(address string, http *http.Client) *Client {
+	return &Client{
+		address: address,
 		http:    *http,
 		Headers: make(map[string][]string),
 	}
-
-	return client, nil
 }
 
-func (api *Client) NewRequest(command string) RequestBuilder {
+// NewRequest constructs new builder for requests
+func (c *Client) NewRequest(command string) RequestBuilder {
 	headers := make(map[string]string)
-	if api.Headers != nil {
-		for k := range api.Headers {
-			headers[k] = api.Headers.Get(k)
+	if c.Headers != nil {
+		for k := range c.Headers {
+			headers[k] = c.Headers.Get(k)
 		}
 	}
 
 	return &requestBuilder{
 		command: command,
-		client:  api,
+		client:  c,
 		headers: headers,
 	}
+}
+
+func (c *Client) DriveAPI() *DriveAPI {
+	return (*DriveAPI)(c)
+}
+
+func (c *Client) ContractAPI() *ContractAPI {
+	return (*ContractAPI)(c)
 }
