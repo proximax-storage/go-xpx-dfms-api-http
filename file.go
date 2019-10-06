@@ -1,4 +1,4 @@
-package client
+package apihttp
 
 import (
 	"archive/tar"
@@ -11,7 +11,7 @@ import (
 	files "github.com/ipfs/go-ipfs-files"
 )
 
-func (api *DriveAPI) newNode(ctx context.Context, ctr cid.Cid, path string, info os.FileInfo) (files.Node, error) {
+func (api *apiDriveFS) newNode(ctx context.Context, ctr cid.Cid, path string, info os.FileInfo) (files.Node, error) {
 	if info.IsDir() {
 		return api.newDir(ctx, ctr, path, info.Size())
 	}
@@ -19,8 +19,8 @@ func (api *DriveAPI) newNode(ctx context.Context, ctr cid.Cid, path string, info
 	return api.newFile(ctx, ctr, path)
 }
 
-func (api *DriveAPI) newFile(ctx context.Context, ctr cid.Cid, path string) (files.File, error) {
-	resp, err := api.client().NewRequest("drive/get").
+func (api *apiDriveFS) newFile(ctx context.Context, ctr cid.Cid, path string) (files.File, error) {
+	resp, err := api.apiHttp().NewRequest("drive/get").
 		Arguments(ctr.String()).
 		Arguments(path).
 		Send(ctx)
@@ -37,7 +37,7 @@ func (api *DriveAPI) newFile(ctx context.Context, ctr cid.Cid, path string) (fil
 	return files.NewReaderStatFile(r, header.FileInfo()), nil
 }
 
-func (api *DriveAPI) newDir(ctx context.Context, ctr cid.Cid, path string, size int64) (files.Directory, error) {
+func (api *apiDriveFS) newDir(ctx context.Context, ctr cid.Cid, path string, size int64) (files.Directory, error) {
 	infos, err := api.Ls(ctx, ctr, path)
 	if err != nil {
 		return nil, err
@@ -61,7 +61,7 @@ type dir struct {
 	path  string
 	size  int64
 
-	api *DriveAPI
+	api *apiDriveFS
 }
 
 func (d *dir) Entries() files.DirIterator {
