@@ -1,4 +1,4 @@
-module github.com/proximax-storage/go-xpx-dfms-http-api
+module github.com/proximax-storage/go-xpx-dfms-api-http
 
 go 1.12
 
