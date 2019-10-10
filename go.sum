@@ -114,8 +114,12 @@ github.com/proximax-storage/go-xpx-dfms-api v0.0.0-20191010135741-13985261b93a h
 github.com/proximax-storage/go-xpx-dfms-api v0.0.0-20191010135741-13985261b93a/go.mod h1:vZe2MRs4rOaayh/y6/vQWqJ+ffYZxHng5kgxrm02nSY=
 github.com/proximax-storage/go-xpx-dfms-api v0.0.0-20191010143202-2ce22e6e32a4 h1:0rzH5BcZYqrXOqriGfdmtgknaFrC5yb4tDGqm4BBiho=
 github.com/proximax-storage/go-xpx-dfms-api v0.0.0-20191010143202-2ce22e6e32a4/go.mod h1:vZe2MRs4rOaayh/y6/vQWqJ+ffYZxHng5kgxrm02nSY=
+github.com/proximax-storage/go-xpx-dfms-api v0.1.0 h1:zWfW1TevQ1ENu80fizrdHRaT+/j+ukk5Wh1xhApjzjg=
+github.com/proximax-storage/go-xpx-dfms-api v0.1.0/go.mod h1:vZe2MRs4rOaayh/y6/vQWqJ+ffYZxHng5kgxrm02nSY=
 github.com/proximax-storage/go-xpx-dfms-drive v0.1.0 h1:Qz/HwdsSrMBqIg3Rvjy78gG06wK5gBzwajQLdButFek=
 github.com/proximax-storage/go-xpx-dfms-drive v0.1.0/go.mod h1:ejfc9Te90+tFWy/dnWLkPnEOnOGHrJW13QAdz6/Pp2A=
+github.com/proximax-storage/go-xpx-dfms-drive v0.1.1-0.20191010152411-a748244e86ef h1:C6LvtU0Rey6D2HQfbF53HrSu7iMUqaV5jZccAyP2lJo=
+github.com/proximax-storage/go-xpx-dfms-drive v0.1.1-0.20191010152411-a748244e86ef/go.mod h1:ejfc9Te90+tFWy/dnWLkPnEOnOGHrJW13QAdz6/Pp2A=
 github.com/rs/cors v1.6.0 h1:G9tHG9lebljV9mfp9SNPDL36nCDxmo3zTlAf1YgvzmI=
 github.com/rs/cors v1.6.0/go.mod h1:gFx+x8UowdsKA9AchylcLynDq+nNFfI8FkUZdN/jGCU=
 github.com/sirupsen/logrus v1.2.0/go.mod h1:LxeOpSwHxABJmUn/MG1IvRgCAasNZTLOkJPxbbu5VWo=
