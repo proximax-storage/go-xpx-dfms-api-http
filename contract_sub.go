@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io"
 
+	api "github.com/proximax-storage/go-xpx-dfms-api"
 	drive "github.com/proximax-storage/go-xpx-dfms-drive"
 )
 
@@ -16,7 +17,7 @@ type contractSub struct {
 	stream io.ReadCloser
 }
 
-func newContractSub(ctx context.Context, stream io.ReadCloser) drive.ContractSubscription {
+func newContractSub(ctx context.Context, stream io.ReadCloser) api.ContractSubscription {
 	ctx, cancel := context.WithCancel(ctx)
 	sub := &contractSub{
 		ctx:    ctx,
@@ -36,30 +37,30 @@ func (sub *contractSub) Next(ctx context.Context) (drive.Contract, error) {
 			return nil, io.EOF
 		}
 
-		return msg.ctr, msg.err
+		return msg.resp.Contract, msg.err
 	case <-ctx.Done():
 		return nil, ctx.Err()
 	}
 }
 
 // TODO Return error
-func (sub *contractSub) Cancel() {
+func (sub *contractSub) Close() error {
 	sub.cancel()
+	return sub.stream.Close()
 }
 
 func (sub *contractSub) handle() {
-	defer sub.stream.Close()
+	defer close(sub.msgs)
 
 	dec := json.NewDecoder(sub.stream)
 	for {
 		msg := &contractSubMsg{
-			ctr: new(drive.BasicContract),
+			resp: new(contractResponse),
 		}
 
-		err := dec.Decode(msg.ctr)
+		err := dec.Decode(msg.resp)
 		if err != nil {
 			if err == io.EOF {
-				close(sub.msgs)
 				return
 			}
 
@@ -75,6 +76,6 @@ func (sub *contractSub) handle() {
 }
 
 type contractSubMsg struct {
-	ctr drive.Contract
-	err error
+	resp *contractResponse
+	err  error
 }

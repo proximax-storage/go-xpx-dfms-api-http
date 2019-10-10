@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io"
 
+	api "github.com/proximax-storage/go-xpx-dfms-api"
 	drive "github.com/proximax-storage/go-xpx-dfms-drive"
 )
 
@@ -16,7 +17,7 @@ type inviteSub struct {
 	stream io.ReadCloser
 }
 
-func newInviteSub(ctx context.Context, stream io.ReadCloser) drive.InviteSubscription {
+func newInviteSub(ctx context.Context, stream io.ReadCloser) api.InviteSubscription {
 	ctx, cancel := context.WithCancel(ctx)
 	sub := &inviteSub{
 		ctx:    ctx,
@@ -36,29 +37,29 @@ func (sub *inviteSub) Next(ctx context.Context) (drive.Invite, error) {
 			return drive.NilInvite, io.EOF
 		}
 
-		return *msg.invite, msg.err
+		return *msg.resp.Invite, msg.err
 	case <-ctx.Done():
 		return drive.NilInvite, ctx.Err()
 	}
 }
 
-func (sub *inviteSub) Cancel() {
-	panic("implement me")
+func (sub *inviteSub) Close() error {
+	sub.cancel()
+	return sub.stream.Close()
 }
 
 func (sub *inviteSub) handle() {
-	defer sub.stream.Close()
+	defer close(sub.msgs)
 
 	dec := json.NewDecoder(sub.stream)
 	for {
 		msg := &inviteSubMsg{
-			invite: new(drive.Invite),
+			resp: new(inviteResponse),
 		}
 
-		err := dec.Decode(msg.invite)
+		err := dec.Decode(msg.resp)
 		if err != nil {
 			if err == io.EOF {
-				close(sub.msgs)
 				return
 			}
 
@@ -74,6 +75,6 @@ func (sub *inviteSub) handle() {
 }
 
 type inviteSubMsg struct {
-	invite *drive.Invite
-	err    error
+	resp *inviteResponse
+	err  error
 }

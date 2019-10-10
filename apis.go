@@ -29,8 +29,7 @@ func (c *clientAPI) FS() api.DriveFS {
 }
 
 func (c *clientAPI) Network() api.Network {
-	// TODO Implement
-	panic("Network api is not implemented")
+	return (*apiNetwork)(c.apiHttp)
 }
 
 type replicatorAPI struct {
@@ -52,6 +51,5 @@ func (r *replicatorAPI) Contract() api.ContractReplicator {
 }
 
 func (r *replicatorAPI) Network() api.Network {
-	// TODO Implement
-	panic("Network api is not implemented")
+	return (*apiNetwork)(r.apiHttp)
 }

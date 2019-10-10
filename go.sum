@@ -108,6 +108,12 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/proximax-storage/go-xpx-dfms-api v0.0.0-20190930111845-f88cc7e72919 h1:UC3sGtlKiwmziZofiPDZ8a+sGYBV0BxhIh6TyMgnTVY=
 github.com/proximax-storage/go-xpx-dfms-api v0.0.0-20190930111845-f88cc7e72919/go.mod h1:vZe2MRs4rOaayh/y6/vQWqJ+ffYZxHng5kgxrm02nSY=
+github.com/proximax-storage/go-xpx-dfms-api v0.0.0-20191010104811-b377cc1f8438 h1:opa+EJ38LpsdUnG6s4ceaOaL5XQcPggsFqXAVB2cu8c=
+github.com/proximax-storage/go-xpx-dfms-api v0.0.0-20191010104811-b377cc1f8438/go.mod h1:vZe2MRs4rOaayh/y6/vQWqJ+ffYZxHng5kgxrm02nSY=
+github.com/proximax-storage/go-xpx-dfms-api v0.0.0-20191010135741-13985261b93a h1:8UtprsasqF+2ysSXlkh6pUe+0im8yrXOaQx9sQ9SeXY=
+github.com/proximax-storage/go-xpx-dfms-api v0.0.0-20191010135741-13985261b93a/go.mod h1:vZe2MRs4rOaayh/y6/vQWqJ+ffYZxHng5kgxrm02nSY=
+github.com/proximax-storage/go-xpx-dfms-api v0.0.0-20191010143202-2ce22e6e32a4 h1:0rzH5BcZYqrXOqriGfdmtgknaFrC5yb4tDGqm4BBiho=
+github.com/proximax-storage/go-xpx-dfms-api v0.0.0-20191010143202-2ce22e6e32a4/go.mod h1:vZe2MRs4rOaayh/y6/vQWqJ+ffYZxHng5kgxrm02nSY=
 github.com/proximax-storage/go-xpx-dfms-drive v0.1.0 h1:Qz/HwdsSrMBqIg3Rvjy78gG06wK5gBzwajQLdButFek=
 github.com/proximax-storage/go-xpx-dfms-drive v0.1.0/go.mod h1:ejfc9Te90+tFWy/dnWLkPnEOnOGHrJW13QAdz6/Pp2A=
 github.com/rs/cors v1.6.0 h1:G9tHG9lebljV9mfp9SNPDL36nCDxmo3zTlAf1YgvzmI=

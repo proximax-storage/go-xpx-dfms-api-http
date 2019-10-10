@@ -22,7 +22,7 @@ func (api *apiContractReplicator) Get(ctx context.Context, id drive.ID) (drive.C
 	return api.apiContractClient().Get(ctx, id)
 }
 
-func (api *apiContractReplicator) Amendments(ctx context.Context, id drive.ID) (drive.ContractSubscription, error) {
+func (api *apiContractReplicator) Amendments(ctx context.Context, id drive.ID) (api.ContractSubscription, error) {
 	return api.apiContractClient().Amendments(ctx, id)
 }
 
@@ -30,11 +30,16 @@ func (api *apiContractReplicator) Accept(ctx context.Context, id drive.ID) error
 	return api.apiHttp().NewRequest("contract/accept").Arguments(id.String()).Exec(ctx, nil)
 }
 
-func (api *apiContractReplicator) Accepted(context.Context) (drive.ContractSubscription, error) {
-	panic("not implemented")
+func (api *apiContractReplicator) Accepted(ctx context.Context) (api.ContractSubscription, error) {
+	resp, err := api.apiHttp().NewRequest("contract/accepted").Send(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return newContractSub(ctx, resp.Output), nil
 }
 
-func (api *apiContractReplicator) Invites(ctx context.Context) (drive.InviteSubscription, error) {
+func (api *apiContractReplicator) Invites(ctx context.Context) (api.InviteSubscription, error) {
 	resp, err := api.apiHttp().NewRequest("contract/invites").Send(ctx)
 	if err != nil {
 		return nil, err
@@ -44,11 +49,11 @@ func (api *apiContractReplicator) Invites(ctx context.Context) (drive.InviteSubs
 }
 
 func (api *apiContractReplicator) StartAccepting(ctx context.Context, _ api.AcceptStrategy) error {
-	return api.apiHttp().NewRequest("contract/accept").Exec(ctx, nil)
+	return api.apiHttp().NewRequest("contract/accepting").Exec(ctx, nil)
 }
 
 func (api *apiContractReplicator) StopAccepting(ctx context.Context) error {
-	return api.apiHttp().NewRequest("contract/accept").Exec(ctx, nil)
+	return api.apiHttp().NewRequest("contract/accepting").Exec(ctx, nil)
 }
 
 func (api *apiContractReplicator) apiContractClient() *apiContractClient {
