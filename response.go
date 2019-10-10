@@ -1,4 +1,4 @@
-package client
+package apihttp
 
 import (
 	"encoding/json"
@@ -119,7 +119,7 @@ func (r *Request) Send(c *http.Client) (*Response, error) {
 		case contentType == "text/plain":
 			out, err := ioutil.ReadAll(resp.Body)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "dfms-http-client: response (%d) read error: %s\n", resp.StatusCode, err)
+				fmt.Fprintf(os.Stderr, "dfms-http: response (%d) read error: %s\n", resp.StatusCode, err)
 			}
 			e.Message = string(out)
 
@@ -134,17 +134,17 @@ func (r *Request) Send(c *http.Client) (*Response, error) {
 			}
 		case contentType == "application/json":
 			if err = json.NewDecoder(resp.Body).Decode(e); err != nil {
-				fmt.Fprintf(os.Stderr, "dfms-http-client: response (%d) unmarshall error: %s\n", resp.StatusCode, err)
+				fmt.Fprintf(os.Stderr, "dfms-http: response (%d) unmarshall error: %s\n", resp.StatusCode, err)
 			}
 		default:
 			// This is a server-side bug (probably).
 			e.Code = cmds.ErrImplementation
-			fmt.Fprintf(os.Stderr, "dfms-http-client: warning! unhandled response (%d) encoding: %s", resp.StatusCode, contentType)
+			fmt.Fprintf(os.Stderr, "dfms-http: warning! unhandled response (%d) encoding: %s", resp.StatusCode, contentType)
 			out, err := ioutil.ReadAll(resp.Body)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "dfms-http-client: response (%d) read error: %s\n", resp.StatusCode, err)
+				fmt.Fprintf(os.Stderr, "dfms-http: response (%d) read error: %s\n", resp.StatusCode, err)
 			}
-			e.Message = fmt.Sprintf("unknown dfms-http-client error encoding: %q - %q", contentType, out)
+			e.Message = fmt.Sprintf("unknown dfms-http error encoding: %q - %q", contentType, out)
 		}
 		nresp.Error = e
 		nresp.Output = nil

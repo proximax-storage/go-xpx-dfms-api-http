@@ -1,4 +1,4 @@
-package client
+package apihttp
 
 import (
 	"bytes"
@@ -30,7 +30,7 @@ type requestBuilder struct {
 	headers map[string]string
 	body    io.Reader
 
-	client *Client
+	client *apiHttp
 }
 
 // Arguments adds the arguments to the args.

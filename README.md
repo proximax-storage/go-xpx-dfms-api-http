@@ -1,4 +1,4 @@
-# go-xpx-dfms-http-client
+# go-xpx-dfms-api-http
 
 [![Documentation](https://godoc.org/github.com/proximax-storage/go-xpx-dfms-http-client?status.svg)](https://godoc.org/github.com/proximax-storage/go-xpx-dfms-http-client)
 [![Go Report Card](https://goreportcard.com/badge/github.com/proximax-storage/go-xpx-dfms-http-client)](https://goreportcard.com/report/github.com/proximax-storage/go-xpx-dfms-http-client)
