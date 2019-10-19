@@ -95,7 +95,7 @@ func (api *apiDriveFS) Ls(ctx context.Context, id cid.Cid, path string) ([]os.Fi
 
 // Stat returns information about a file or directory at a given path of a specific Drive
 func (api *apiDriveFS) Stat(ctx context.Context, id cid.Cid, path string) (os.FileInfo, error) {
-	out := &statResponse{}
+	out := &statResponse{&Stat{}}
 	return out.toFileInfo(), api.apiHttp().NewRequest("drive/stat").
 		Arguments(id.String()).
 		Arguments(path).
