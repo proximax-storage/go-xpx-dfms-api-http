@@ -124,7 +124,7 @@ type lsResponse struct {
 func (ls *lsResponse) toFileInfo() []os.FileInfo {
 	fis := make([]os.FileInfo, len(ls.List))
 	for i, entry := range ls.List {
-		fis[i] = &FileInfo{*entry}
+		fis[i] = &FileInfo{entry}
 	}
 
 	return fis
@@ -135,5 +135,5 @@ type statResponse struct {
 }
 
 func (ls *statResponse) toFileInfo() os.FileInfo {
-	return &FileInfo{*ls.Stat}
+	return &FileInfo{ls.Stat}
 }

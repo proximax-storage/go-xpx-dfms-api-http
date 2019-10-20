@@ -15,7 +15,7 @@ type Stat struct {
 }
 
 type FileInfo struct {
-	stat Stat
+	stat *Stat
 }
 
 func (ref *FileInfo) Name() string {
@@ -39,5 +39,5 @@ func (ref *FileInfo) IsDir() bool {
 }
 
 func (ref *FileInfo) Sys() interface{} {
-	return &ref.stat
+	return ref.stat
 }
