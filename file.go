@@ -110,7 +110,7 @@ func (di *dirIter) Next() bool {
 	}
 
 	l := len(di.infos)
-	if l == 0 || di.i == l {
+	if l == 0 || di.i == l-1 {
 		return false
 	}
 
