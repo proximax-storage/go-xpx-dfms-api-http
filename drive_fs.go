@@ -87,10 +87,15 @@ func (api *apiDriveFS) MakeDir(ctx context.Context, id cid.Cid, path string, opt
 // Ls lists all the files and directories of a specific Drive and information about them at a given path.
 func (api *apiDriveFS) Ls(ctx context.Context, id cid.Cid, path string) ([]os.FileInfo, error) {
 	out := &lsResponse{}
-	return out.toFileInfo(), api.apiHttp().NewRequest("drive/ls").
+	err := api.apiHttp().NewRequest("drive/ls").
 		Arguments(id.String()).
 		Arguments(path).
 		Exec(ctx, out)
+	if err != nil {
+		return nil, err
+	}
+
+	return out.toFileInfo(), nil
 }
 
 // Stat returns information about a file or directory at a given path of a specific Drive
