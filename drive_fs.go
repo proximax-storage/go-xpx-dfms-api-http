@@ -6,10 +6,8 @@ import (
 
 	"github.com/ipfs/go-cid"
 	files "github.com/ipfs/go-ipfs-files"
-	api "github.com/proximax-storage/go-xpx-dfms-api"
+	iapi "github.com/proximax-storage/go-xpx-dfms-api"
 )
-
-// TODO Support DriveOptions
 
 // apiDriveFS is an implementation of DFMS's drive apiHttp.
 // Drive is FS like abstraction, which allows Drive contract
@@ -22,10 +20,12 @@ import (
 type apiDriveFS apiHttp
 
 // Add adds the file to a specific Drive and to a given path.
-func (api *apiDriveFS) Add(ctx context.Context, id cid.Cid, path string, file files.Node, opts ...api.DriveOption) (cid.Cid, error) {
+func (api *apiDriveFS) Add(ctx context.Context, id cid.Cid, path string, file files.Node, opts ...iapi.DriveOption) (cid.Cid, error) {
+	opt := iapi.ParseDriveOptions(opts...)
 	req := api.apiHttp().NewRequest("drive/add").
 		Arguments(id.String()).
 		Arguments(path).
+		Option("flush", opt.Flush).
 		FileBody(file)
 
 	out := &addResponse{}
@@ -38,7 +38,7 @@ func (api *apiDriveFS) Add(ctx context.Context, id cid.Cid, path string, file fi
 }
 
 // Get retrieves file from a specific contract at a given path.
-func (api *apiDriveFS) Get(ctx context.Context, id cid.Cid, path string, opts ...api.DriveOption) (files.Node, error) {
+func (api *apiDriveFS) Get(ctx context.Context, id cid.Cid, path string, opts ...iapi.DriveOption) (files.Node, error) {
 	info, err := api.Stat(ctx, id, path)
 	if err != nil {
 		return nil, err
@@ -49,38 +49,47 @@ func (api *apiDriveFS) Get(ctx context.Context, id cid.Cid, path string, opts ..
 
 // Remove removes reference of the file at a given path from a specific Drive.
 // TODO Add options to allow full remove
-func (api *apiDriveFS) Remove(ctx context.Context, id cid.Cid, path string, opts ...api.DriveOption) error {
-	return api.apiHttp().NewRequest("drive/remove").
+func (api *apiDriveFS) Remove(ctx context.Context, id cid.Cid, path string, opts ...iapi.DriveOption) error {
+	opt := iapi.ParseDriveOptions(opts...)
+	return api.apiHttp().NewRequest("drive/rm").
 		Arguments(id.String()).
 		Arguments(path).
+		Option("local", opt.Local).
+		Option("flush", opt.Flush).
 		Exec(ctx, nil)
 }
 
 // Move moves file in a specific Drive from one path to another.
-func (api *apiDriveFS) Move(ctx context.Context, id cid.Cid, src string, dst string, opts ...api.DriveOption) error {
+func (api *apiDriveFS) Move(ctx context.Context, id cid.Cid, src string, dst string, opts ...iapi.DriveOption) error {
+	opt := iapi.ParseDriveOptions(opts...)
 	return api.apiHttp().NewRequest("drive/mv").
 		Arguments(id.String()).
 		Arguments(src).
 		Arguments(dst).
+		Option("flush", opt.Flush).
 		Exec(ctx, nil)
 }
 
 // Copy copies file in a specific Drive from one path to another.
 // NOTE: Does not do actual copy, only copies reference(a.k.a SymLink).
 // That way file is not duplicated on a disk, but accesible from different paths.
-func (api *apiDriveFS) Copy(ctx context.Context, id cid.Cid, src string, dst string, opts ...api.DriveOption) error {
+func (api *apiDriveFS) Copy(ctx context.Context, id cid.Cid, src string, dst string, opts ...iapi.DriveOption) error {
+	opt := iapi.ParseDriveOptions(opts...)
 	return api.apiHttp().NewRequest("drive/cp").
 		Arguments(id.String()).
 		Arguments(src).
 		Arguments(dst).
+		Option("flush", opt.Flush).
 		Exec(ctx, nil)
 }
 
 // MakeDir created new directory in a specific Drive at a given path.
-func (api *apiDriveFS) MakeDir(ctx context.Context, id cid.Cid, path string, opts ...api.DriveOption) error {
+func (api *apiDriveFS) MakeDir(ctx context.Context, id cid.Cid, path string, opts ...iapi.DriveOption) error {
+	opt := iapi.ParseDriveOptions(opts...)
 	return api.apiHttp().NewRequest("drive/mkdir").
 		Arguments(id.String()).
 		Arguments(path).
+		Option("flush", opt).
 		Exec(ctx, nil)
 }
 
