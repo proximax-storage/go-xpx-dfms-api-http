@@ -38,7 +38,7 @@ func (r *trailerReader) Close() error {
 
 type Response struct {
 	Output io.ReadCloser
-	Error  *Error
+	Error  error
 }
 
 func (r *Response) Close() error {
