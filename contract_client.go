@@ -3,6 +3,7 @@ package apihttp
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
 	"github.com/ipfs/go-cid"
 	"github.com/proximax-storage/go-xpx-dfms-api"
@@ -14,8 +15,8 @@ type apiContractClient apiHttp
 func (api *apiContractClient) Compose(ctx context.Context, space, duration uint64, opts ...api.ComposeOpt) (drive.Contract, error) {
 	out := new(contractResponse)
 	return out.Contract, api.apiHttp().NewRequest("contract/compose").
-		Arguments(string(space)).
-		Arguments(string(duration)).
+		Arguments(fmt.Sprintf("%d", space)).
+		Arguments(fmt.Sprintf("%d", duration)).
 		Exec(ctx, out)
 }
 
