@@ -98,23 +98,25 @@ func (r *requestBuilder) Send(ctx context.Context) (*Response, error) {
 	req.Opts = r.opts
 	req.Headers = r.headers
 	req.Body = r.body
-	return req.Send(&r.client.http)
+
+	resp, err := req.Send(&r.client.http)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, resp.Error
 }
 
 // Exec sends the request a request and decodes the response.
 func (r *requestBuilder) Exec(ctx context.Context, res interface{}) error {
-	httpRes, err := r.Send(ctx)
+	resp, err := r.Send(ctx)
 	if err != nil {
 		return err
 	}
 
 	if res == nil {
-		lateErr := httpRes.Close()
-		if httpRes.Error != nil {
-			return httpRes.Error
-		}
-		return lateErr
+		return resp.Close()
 	}
 
-	return httpRes.decode(res)
+	return resp.decode(res)
 }
