@@ -54,7 +54,9 @@ func (sub *inviteSub) handle() {
 	dec := json.NewDecoder(sub.stream)
 	for {
 		msg := &inviteSubMsg{
-			resp: new(inviteResponse),
+			resp: &inviteResponse{
+				Invite: &drive.Invite{},
+			},
 		}
 
 		err := dec.Decode(msg.resp)
