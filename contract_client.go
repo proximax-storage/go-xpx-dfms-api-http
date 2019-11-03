@@ -5,14 +5,13 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/ipfs/go-cid"
 	"github.com/proximax-storage/go-xpx-dfms-api"
 	"github.com/proximax-storage/go-xpx-dfms-drive"
 )
 
 type apiContractClient apiHttp
 
-func (api *apiContractClient) Compose(ctx context.Context, space, duration uint64, opts ...api.ComposeOpt) (drive.Contract, error) {
+func (api *apiContractClient) Compose(ctx context.Context, space, duration uint64, opts ...api.ComposeOpt) (*drive.Contract, error) {
 	out := new(contractResponse)
 	return out.Contract, api.apiHttp().NewRequest("contract/compose").
 		Arguments(fmt.Sprintf("%d", space)).
@@ -22,10 +21,10 @@ func (api *apiContractClient) Compose(ctx context.Context, space, duration uint6
 
 func (api *apiContractClient) List(ctx context.Context) ([]drive.ID, error) {
 	out := new(contractLsResponse)
-	return out.Cids, api.apiHttp().NewRequest("contract/ls").Exec(ctx, out)
+	return out.Ids, api.apiHttp().NewRequest("contract/ls").Exec(ctx, out)
 }
 
-func (api *apiContractClient) Get(ctx context.Context, id drive.ID) (drive.Contract, error) {
+func (api *apiContractClient) Get(ctx context.Context, id drive.ID) (*drive.Contract, error) {
 	out := new(contractResponse)
 	return out.Contract, api.apiHttp().NewRequest("contract/get").Exec(ctx, out)
 }
@@ -48,7 +47,7 @@ type inviteResponse struct {
 }
 
 type contractResponse struct {
-	Contract drive.Contract
+	Contract *drive.Contract
 }
 
 func (res *contractResponse) UnmarshalJSON(data []byte) error {
@@ -58,10 +57,10 @@ func (res *contractResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	res.Contract = &drive.BasicContract{} // TODO Decode to concrete type
+	res.Contract = &drive.Contract{} // TODO Decode to concrete type
 	return res.Contract.UnmarshalJSON(in["Contract"])
 }
 
 type contractLsResponse struct {
-	Cids []cid.Cid
+	Ids []drive.ID
 }

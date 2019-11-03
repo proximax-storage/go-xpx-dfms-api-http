@@ -30,7 +30,7 @@ func newContractSub(ctx context.Context, stream io.ReadCloser) api.ContractSubsc
 	return sub
 }
 
-func (sub *contractSub) Next(ctx context.Context) (drive.Contract, error) {
+func (sub *contractSub) Next(ctx context.Context) (*drive.Contract, error) {
 	select {
 	case msg, ok := <-sub.msgs:
 		if !ok {

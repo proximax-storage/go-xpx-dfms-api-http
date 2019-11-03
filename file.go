@@ -7,11 +7,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ipfs/go-cid"
 	files "github.com/ipfs/go-ipfs-files"
+	drive "github.com/proximax-storage/go-xpx-dfms-drive"
 )
 
-func (api *apiDriveFS) newNode(ctx context.Context, ctr cid.Cid, path string, info os.FileInfo) (files.Node, error) {
+func (api *apiDriveFS) newNode(ctx context.Context, ctr drive.ID, path string, info os.FileInfo) (files.Node, error) {
 	if info.IsDir() {
 		return api.newDir(ctx, ctr, path, info.Size())
 	}
@@ -19,9 +19,15 @@ func (api *apiDriveFS) newNode(ctx context.Context, ctr cid.Cid, path string, in
 	return api.newFile(ctx, ctr, path)
 }
 
-func (api *apiDriveFS) newFile(ctx context.Context, ctr cid.Cid, path string) (files.File, error) {
+func (api *apiDriveFS) newFile(ctx context.Context, ctr drive.ID, path string) (files.File, error) {
+
+	driveId, err := drive.IdToString(ctr)
+	if err != nil {
+		return nil, err
+	}
+
 	resp, err := api.apiHttp().NewRequest("drive/get").
-		Arguments(ctr.String()).
+		Arguments(driveId).
 		Arguments(path).
 		Send(ctx)
 	if err != nil {
@@ -37,7 +43,7 @@ func (api *apiDriveFS) newFile(ctx context.Context, ctr cid.Cid, path string) (f
 	return files.NewReaderStatFile(r, header.FileInfo()), nil
 }
 
-func (api *apiDriveFS) newDir(ctx context.Context, ctr cid.Cid, path string, size int64) (files.Directory, error) {
+func (api *apiDriveFS) newDir(ctx context.Context, ctr drive.ID, path string, size int64) (files.Directory, error) {
 	infos, err := api.Ls(ctx, ctr, path)
 	if err != nil {
 		return nil, err
@@ -56,7 +62,7 @@ func (api *apiDriveFS) newDir(ctx context.Context, ctr cid.Cid, path string, siz
 type dir struct {
 	ctx context.Context
 
-	ctr   cid.Cid
+	ctr   drive.ID
 	infos []os.FileInfo
 	path  string
 	size  int64
