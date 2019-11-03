@@ -3,22 +3,21 @@ package apihttp
 import (
 	"context"
 
-	"github.com/ipfs/go-cid"
 	"github.com/proximax-storage/go-xpx-dfms-api"
 	"github.com/proximax-storage/go-xpx-dfms-drive"
 )
 
 type apiContractReplicator apiHttp
 
-func (api *apiContractReplicator) Compose(ctx context.Context, space, duration uint64, opts ...api.ComposeOpt) (drive.Contract, error) {
+func (api *apiContractReplicator) Compose(ctx context.Context, space, duration uint64, opts ...api.ComposeOpt) (*drive.Contract, error) {
 	return api.apiContractClient().Compose(ctx, space, duration, opts...)
 }
 
-func (api *apiContractReplicator) List(ctx context.Context) ([]cid.Cid, error) {
+func (api *apiContractReplicator) List(ctx context.Context) ([]drive.ID, error) {
 	return api.apiContractClient().List(ctx)
 }
 
-func (api *apiContractReplicator) Get(ctx context.Context, id drive.ID) (drive.Contract, error) {
+func (api *apiContractReplicator) Get(ctx context.Context, id drive.ID) (*drive.Contract, error) {
 	return api.apiContractClient().Get(ctx, id)
 }
 
@@ -27,7 +26,12 @@ func (api *apiContractReplicator) Amendments(ctx context.Context, id drive.ID) (
 }
 
 func (api *apiContractReplicator) Accept(ctx context.Context, id drive.ID) error {
-	return api.apiHttp().NewRequest("contract/accept").Arguments(id.String()).Exec(ctx, nil)
+
+	str, err := drive.IdToString(id)
+	if err != nil {
+		return err
+	}
+	return api.apiHttp().NewRequest("contract/accept").Arguments(str).Exec(ctx, nil)
 }
 
 func (api *apiContractReplicator) Accepted(ctx context.Context) (api.ContractSubscription, error) {
