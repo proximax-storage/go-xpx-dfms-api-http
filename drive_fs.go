@@ -2,6 +2,7 @@ package apihttp
 
 import (
 	"context"
+	"github.com/ipfs/go-cid"
 	"os"
 
 	files "github.com/ipfs/go-ipfs-files"
@@ -20,12 +21,12 @@ import (
 type apiDriveFS apiHttp
 
 // Add adds the file to a specific Drive and to a given path.
-func (api *apiDriveFS) Add(ctx context.Context, id drive.ID, path string, file files.Node, opts ...iapi.DriveOption) (drive.ID, error) {
+func (api *apiDriveFS) Add(ctx context.Context, id drive.ID, path string, file files.Node, opts ...iapi.DriveOption) (cid.Cid, error) {
 	opt := iapi.ParseDriveOptions(opts...)
 
 	driveId, err := drive.IdToString(id)
 	if err != nil {
-		return nil, err
+		return cid.Undef, err
 	}
 
 	req := api.apiHttp().NewRequest("drive/add").
@@ -37,10 +38,9 @@ func (api *apiDriveFS) Add(ctx context.Context, id drive.ID, path string, file f
 	out := &addResponse{}
 	err = req.Exec(ctx, out)
 	if err != nil {
-		return nil, err
+		return cid.Undef, err
 	}
-
-	return drive.NewIDFromString(out.Id)
+	return cid.Decode(out.Id)
 }
 
 // Get retrieves file from a specific contract at a given path.
