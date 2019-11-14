@@ -22,7 +22,7 @@ func (api *apiContractClient) Compose(ctx context.Context, space, duration uint6
 		Arguments(fmt.Sprintf("%d", space)).
 		Arguments(fmt.Sprintf("%d", duration)).
 		Option("replicas", options.Replicas).
-		Option("min-approvers", options.MinReplicators).
+		Option("min-replicators", options.MinReplicators).
 		Option("billing-price", options.BillingPrice).
 		Option("billing-period", options.BillingPeriod).
 		Option("percent-approvers", options.PercentApprovers).
