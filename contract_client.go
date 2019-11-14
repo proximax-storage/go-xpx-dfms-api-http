@@ -5,17 +5,26 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/proximax-storage/go-xpx-dfms-api"
+	apis "github.com/proximax-storage/go-xpx-dfms-api"
 	"github.com/proximax-storage/go-xpx-dfms-drive"
 )
 
 type apiContractClient apiHttp
 
-func (api *apiContractClient) Compose(ctx context.Context, space, duration uint64, opts ...api.ComposeOpt) (*drive.Contract, error) {
+func (api *apiContractClient) Compose(ctx context.Context, space, duration uint64, opts ...apis.ComposeOpt) (*drive.Contract, error) {
+	var options apis.ComposeOpts
+
+	if err := options.Apply(opts...); err != nil {
+		return nil, err
+	}
 	out := new(contractResponse)
 	return out.Contract, api.apiHttp().NewRequest("contract/compose").
 		Arguments(fmt.Sprintf("%d", space)).
 		Arguments(fmt.Sprintf("%d", duration)).
+		Arguments(fmt.Sprintf("%d", options.Replicas)).
+		Arguments(fmt.Sprintf("%d", options.MinReplicators)).
+		Arguments(fmt.Sprintf("%d", options.BillingPrice)).
+		Arguments(fmt.Sprintf("%d", options.BillingPeriod)).
 		Exec(ctx, out)
 }
 
@@ -29,7 +38,7 @@ func (api *apiContractClient) Get(ctx context.Context, id drive.ID) (*drive.Cont
 	return out.Contract, api.apiHttp().NewRequest("contract/get").Exec(ctx, out)
 }
 
-func (api *apiContractClient) Amendments(ctx context.Context, id drive.ID) (api.ContractSubscription, error) {
+func (api *apiContractClient) Amendments(ctx context.Context, id drive.ID) (apis.ContractSubscription, error) {
 	resp, err := api.apiHttp().NewRequest("contract/ammends").Send(ctx)
 	if err != nil {
 		return nil, err
