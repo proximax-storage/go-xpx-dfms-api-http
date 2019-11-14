@@ -2,8 +2,9 @@ package apihttp
 
 import (
 	"context"
-	"github.com/ipfs/go-cid"
 	"os"
+
+	"github.com/ipfs/go-cid"
 
 	files "github.com/ipfs/go-ipfs-files"
 	iapi "github.com/proximax-storage/go-xpx-dfms-api"
@@ -24,7 +25,7 @@ type apiDriveFS apiHttp
 func (api *apiDriveFS) Add(ctx context.Context, id drive.ID, path string, file files.Node, opts ...iapi.DriveOption) (cid.Cid, error) {
 	opt := iapi.ParseDriveOptions(opts...)
 
-	driveId, err := drive.IdToString(id)
+	driveId, err := drive.IDToString(id)
 	if err != nil {
 		return cid.Undef, err
 	}
@@ -58,7 +59,7 @@ func (api *apiDriveFS) Get(ctx context.Context, id drive.ID, path string, opts .
 func (api *apiDriveFS) Remove(ctx context.Context, id drive.ID, path string, opts ...iapi.DriveOption) error {
 	opt := iapi.ParseDriveOptions(opts...)
 
-	driveId, err := drive.IdToString(id)
+	driveId, err := drive.IDToString(id)
 	if err != nil {
 		return err
 	}
@@ -75,7 +76,7 @@ func (api *apiDriveFS) Remove(ctx context.Context, id drive.ID, path string, opt
 func (api *apiDriveFS) Move(ctx context.Context, id drive.ID, src string, dst string, opts ...iapi.DriveOption) error {
 	opt := iapi.ParseDriveOptions(opts...)
 
-	driveId, err := drive.IdToString(id)
+	driveId, err := drive.IDToString(id)
 	if err != nil {
 		return err
 	}
@@ -94,7 +95,7 @@ func (api *apiDriveFS) Move(ctx context.Context, id drive.ID, src string, dst st
 func (api *apiDriveFS) Copy(ctx context.Context, id drive.ID, src string, dst string, opts ...iapi.DriveOption) error {
 	opt := iapi.ParseDriveOptions(opts...)
 
-	driveId, err := drive.IdToString(id)
+	driveId, err := drive.IDToString(id)
 	if err != nil {
 		return err
 	}
@@ -111,7 +112,7 @@ func (api *apiDriveFS) Copy(ctx context.Context, id drive.ID, src string, dst st
 func (api *apiDriveFS) MakeDir(ctx context.Context, id drive.ID, path string, opts ...iapi.DriveOption) error {
 	opt := iapi.ParseDriveOptions(opts...)
 
-	driveId, err := drive.IdToString(id)
+	driveId, err := drive.IDToString(id)
 	if err != nil {
 		return err
 	}
@@ -127,7 +128,7 @@ func (api *apiDriveFS) MakeDir(ctx context.Context, id drive.ID, path string, op
 func (api *apiDriveFS) Ls(ctx context.Context, id drive.ID, path string) ([]os.FileInfo, error) {
 	out := &lsResponse{}
 
-	driveId, err := drive.IdToString(id)
+	driveId, err := drive.IDToString(id)
 	if err != nil {
 		return nil, err
 	}
@@ -147,7 +148,7 @@ func (api *apiDriveFS) Ls(ctx context.Context, id drive.ID, path string) ([]os.F
 func (api *apiDriveFS) Stat(ctx context.Context, id drive.ID, path string) (os.FileInfo, error) {
 	out := &statResponse{&Stat{}}
 
-	driveId, err := drive.IdToString(id)
+	driveId, err := drive.IDToString(id)
 	if err != nil {
 		return nil, err
 	}
@@ -161,7 +162,7 @@ func (api *apiDriveFS) Stat(ctx context.Context, id drive.ID, path string) (os.F
 // Flush uploads the state of a Drive to all contract members.
 func (api *apiDriveFS) Flush(ctx context.Context, id drive.ID) error {
 
-	driveId, err := drive.IdToString(id)
+	driveId, err := drive.IDToString(id)
 	if err != nil {
 		return err
 	}

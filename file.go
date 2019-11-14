@@ -20,8 +20,7 @@ func (api *apiDriveFS) newNode(ctx context.Context, ctr drive.ID, path string, i
 }
 
 func (api *apiDriveFS) newFile(ctx context.Context, ctr drive.ID, path string) (files.File, error) {
-
-	driveId, err := drive.IdToString(ctr)
+	driveId, err := drive.IDToString(ctr)
 	if err != nil {
 		return nil, err
 	}
