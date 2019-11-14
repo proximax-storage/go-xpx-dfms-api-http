@@ -21,11 +21,11 @@ func (api *apiContractClient) Compose(ctx context.Context, space, duration uint6
 	return out.Contract, api.apiHttp().NewRequest("contract/compose").
 		Arguments(fmt.Sprintf("%d", space)).
 		Arguments(fmt.Sprintf("%d", duration)).
-		Arguments(fmt.Sprintf("%d", options.Replicas)).
-		Arguments(fmt.Sprintf("%d", options.MinReplicators)).
-		Arguments(fmt.Sprintf("%d", options.BillingPrice)).
-		Arguments(fmt.Sprintf("%d", options.BillingPeriod)).
-		Arguments(fmt.Sprintf("%d", options.PercentApprovers)).
+		Option("replicas", options.Replicas).
+		Option("min-approvers", options.MinReplicators).
+		Option("billing-price", options.BillingPrice).
+		Option("billing-period", options.BillingPeriod).
+		Option("percent-approvers", options.PercentApprovers).
 		Exec(ctx, out)
 }
 
