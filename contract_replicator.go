@@ -26,12 +26,7 @@ func (api *apiContractReplicator) Amendments(ctx context.Context, id drive.ID) (
 }
 
 func (api *apiContractReplicator) Accept(ctx context.Context, id drive.ID) error {
-	str, err := drive.IDToString(id)
-	if err != nil {
-		return err
-	}
-
-	return api.apiHttp().NewRequest("contract/accept").Arguments(str).Exec(ctx, nil)
+	return api.apiHttp().NewRequest("contract/accept").Arguments(id.String()).Exec(ctx, nil)
 }
 
 func (api *apiContractReplicator) Accepted(ctx context.Context) (api.ContractSubscription, error) {

@@ -11,22 +11,17 @@ import (
 	drive "github.com/proximax-storage/go-xpx-dfms-drive"
 )
 
-func (api *apiDriveFS) newNode(ctx context.Context, ctr drive.ID, path string, info os.FileInfo) (files.Node, error) {
+func (api *apiDriveFS) newNode(ctx context.Context, id drive.ID, path string, info os.FileInfo) (files.Node, error) {
 	if info.IsDir() {
-		return api.newDir(ctx, ctr, path, info.Size())
+		return api.newDir(ctx, id, path, info.Size())
 	}
 
-	return api.newFile(ctx, ctr, path)
+	return api.newFile(ctx, id, path)
 }
 
-func (api *apiDriveFS) newFile(ctx context.Context, ctr drive.ID, path string) (files.File, error) {
-	driveId, err := drive.IDToString(ctr)
-	if err != nil {
-		return nil, err
-	}
-
+func (api *apiDriveFS) newFile(ctx context.Context, id drive.ID, path string) (files.File, error) {
 	resp, err := api.apiHttp().NewRequest("drive/get").
-		Arguments(driveId).
+		Arguments(id.String()).
 		Arguments(path).
 		Send(ctx)
 	if err != nil {
@@ -42,15 +37,15 @@ func (api *apiDriveFS) newFile(ctx context.Context, ctr drive.ID, path string) (
 	return files.NewReaderStatFile(r, header.FileInfo()), nil
 }
 
-func (api *apiDriveFS) newDir(ctx context.Context, ctr drive.ID, path string, size int64) (files.Directory, error) {
-	infos, err := api.Ls(ctx, ctr, path)
+func (api *apiDriveFS) newDir(ctx context.Context, id drive.ID, path string, size int64) (files.Directory, error) {
+	infos, err := api.Ls(ctx, id, path)
 	if err != nil {
 		return nil, err
 	}
 
 	return &dir{
 		ctx:   ctx,
-		ctr:   ctr,
+		id:    id,
 		infos: infos,
 		path:  path,
 		size:  size,
@@ -61,7 +56,7 @@ func (api *apiDriveFS) newDir(ctx context.Context, ctr drive.ID, path string, si
 type dir struct {
 	ctx context.Context
 
-	ctr   drive.ID
+	id    drive.ID
 	infos []os.FileInfo
 	path  string
 	size  int64
@@ -121,7 +116,7 @@ func (di *dirIter) Next() bool {
 
 	di.i++
 
-	node, err := di.api.newNode(di.ctx, di.ctr, filepath.Join(di.path, di.Name()), di.current())
+	node, err := di.api.newNode(di.ctx, di.id, filepath.Join(di.path, di.Name()), di.current())
 	if err != nil {
 		di.err = err
 		return false
