@@ -2,7 +2,6 @@ package apihttp
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
 	apis "github.com/proximax-storage/go-xpx-dfms-api"
@@ -58,17 +57,6 @@ type inviteResponse struct {
 
 type contractResponse struct {
 	Contract *drive.Contract
-}
-
-func (res *contractResponse) UnmarshalJSON(data []byte) error {
-	in := map[string]json.RawMessage{}
-	err := json.Unmarshal(data, &in)
-	if err != nil {
-		return err
-	}
-
-	res.Contract = &drive.Contract{} // TODO Decode to concrete type
-	return res.Contract.UnmarshalJSON(in["Contract"])
 }
 
 type contractLsResponse struct {

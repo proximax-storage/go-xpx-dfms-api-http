@@ -25,19 +25,14 @@ type apiDriveFS apiHttp
 func (api *apiDriveFS) Add(ctx context.Context, id drive.ID, path string, file files.Node, opts ...iapi.DriveOption) (cid.Cid, error) {
 	opt := iapi.ParseDriveOptions(opts...)
 
-	driveId, err := drive.IDToString(id)
-	if err != nil {
-		return cid.Undef, err
-	}
-
 	req := api.apiHttp().NewRequest("drive/add").
-		Arguments(driveId).
+		Arguments(id.String()).
 		Arguments(path).
 		Option("flush", opt.Flush).
 		FileBody(file)
 
 	out := &addResponse{}
-	err = req.Exec(ctx, out)
+	err := req.Exec(ctx, out)
 	if err != nil {
 		return cid.Undef, err
 	}
@@ -58,14 +53,8 @@ func (api *apiDriveFS) Get(ctx context.Context, id drive.ID, path string, opts .
 // TODO Add options to allow full remove
 func (api *apiDriveFS) Remove(ctx context.Context, id drive.ID, path string, opts ...iapi.DriveOption) error {
 	opt := iapi.ParseDriveOptions(opts...)
-
-	driveId, err := drive.IDToString(id)
-	if err != nil {
-		return err
-	}
-
 	return api.apiHttp().NewRequest("drive/rm").
-		Arguments(driveId).
+		Arguments(id.String()).
 		Arguments(path).
 		Option("local", opt.Local).
 		Option("flush", opt.Flush).
@@ -75,14 +64,8 @@ func (api *apiDriveFS) Remove(ctx context.Context, id drive.ID, path string, opt
 // Move moves file in a specific Drive from one path to another.
 func (api *apiDriveFS) Move(ctx context.Context, id drive.ID, src string, dst string, opts ...iapi.DriveOption) error {
 	opt := iapi.ParseDriveOptions(opts...)
-
-	driveId, err := drive.IDToString(id)
-	if err != nil {
-		return err
-	}
-
 	return api.apiHttp().NewRequest("drive/mv").
-		Arguments(driveId).
+		Arguments(id.String()).
 		Arguments(src).
 		Arguments(dst).
 		Option("flush", opt.Flush).
@@ -94,14 +77,8 @@ func (api *apiDriveFS) Move(ctx context.Context, id drive.ID, src string, dst st
 // That way file is not duplicated on a disk, but accesible from different paths.
 func (api *apiDriveFS) Copy(ctx context.Context, id drive.ID, src string, dst string, opts ...iapi.DriveOption) error {
 	opt := iapi.ParseDriveOptions(opts...)
-
-	driveId, err := drive.IDToString(id)
-	if err != nil {
-		return err
-	}
-
 	return api.apiHttp().NewRequest("drive/cp").
-		Arguments(driveId).
+		Arguments(id.String()).
 		Arguments(src).
 		Arguments(dst).
 		Option("flush", opt.Flush).
@@ -111,14 +88,8 @@ func (api *apiDriveFS) Copy(ctx context.Context, id drive.ID, src string, dst st
 // MakeDir created new directory in a specific Drive at a given path.
 func (api *apiDriveFS) MakeDir(ctx context.Context, id drive.ID, path string, opts ...iapi.DriveOption) error {
 	opt := iapi.ParseDriveOptions(opts...)
-
-	driveId, err := drive.IDToString(id)
-	if err != nil {
-		return err
-	}
-
 	return api.apiHttp().NewRequest("drive/mkdir").
-		Arguments(driveId).
+		Arguments(id.String()).
 		Arguments(path).
 		Option("flush", opt).
 		Exec(ctx, nil)
@@ -127,14 +98,8 @@ func (api *apiDriveFS) MakeDir(ctx context.Context, id drive.ID, path string, op
 // Ls lists all the files and directories of a specific Drive and information about them at a given path.
 func (api *apiDriveFS) Ls(ctx context.Context, id drive.ID, path string) ([]os.FileInfo, error) {
 	out := &lsResponse{}
-
-	driveId, err := drive.IDToString(id)
-	if err != nil {
-		return nil, err
-	}
-
-	err = api.apiHttp().NewRequest("drive/ls").
-		Arguments(driveId).
+	err := api.apiHttp().NewRequest("drive/ls").
+		Arguments(id.String()).
 		Arguments(path).
 		Exec(ctx, out)
 	if err != nil {
@@ -147,28 +112,16 @@ func (api *apiDriveFS) Ls(ctx context.Context, id drive.ID, path string) ([]os.F
 // Stat returns information about a file or directory at a given path of a specific Drive
 func (api *apiDriveFS) Stat(ctx context.Context, id drive.ID, path string) (os.FileInfo, error) {
 	out := &statResponse{&Stat{}}
-
-	driveId, err := drive.IDToString(id)
-	if err != nil {
-		return nil, err
-	}
-
 	return out.toFileInfo(), api.apiHttp().NewRequest("drive/stat").
-		Arguments(driveId).
+		Arguments(id.String()).
 		Arguments(path).
 		Exec(ctx, out)
 }
 
 // Flush uploads the state of a Drive to all contract members.
 func (api *apiDriveFS) Flush(ctx context.Context, id drive.ID) error {
-
-	driveId, err := drive.IDToString(id)
-	if err != nil {
-		return err
-	}
-
 	return api.apiHttp().NewRequest("drive/flush").
-		Arguments(driveId).
+		Arguments(id.String()).
 		Exec(ctx, nil)
 }
 

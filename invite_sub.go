@@ -30,16 +30,16 @@ func newInviteSub(ctx context.Context, stream io.ReadCloser) api.InviteSubscript
 	return sub
 }
 
-func (sub *inviteSub) Next(ctx context.Context) (drive.Invite, error) {
+func (sub *inviteSub) Next(ctx context.Context) (*drive.Invite, error) {
 	select {
 	case msg, ok := <-sub.msgs:
 		if !ok {
-			return drive.NilInvite, io.EOF
+			return nil, io.EOF
 		}
 
-		return *msg.resp.Invite, msg.err
+		return msg.resp.Invite, msg.err
 	case <-ctx.Done():
-		return drive.NilInvite, ctx.Err()
+		return nil, ctx.Err()
 	}
 }
 
