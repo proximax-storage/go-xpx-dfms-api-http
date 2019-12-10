@@ -35,16 +35,21 @@ func (api *apiContractClient) List(ctx context.Context) ([]drive.ID, error) {
 
 func (api *apiContractClient) Get(ctx context.Context, id drive.ID) (*drive.Contract, error) {
 	out := new(contractResponse)
-	return out.Contract, api.apiHttp().NewRequest("contract/get").Exec(ctx, out)
+	return out.Contract, api.apiHttp().NewRequest("contract/get").Arguments(id.String()).Exec(ctx, out)
 }
 
 func (api *apiContractClient) Amendments(ctx context.Context, id drive.ID) (apis.ContractSubscription, error) {
-	resp, err := api.apiHttp().NewRequest("contract/ammends").Send(ctx)
+	resp, err := api.apiHttp().NewRequest("contract/ammends").Arguments(id.String()).Send(ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	return newContractSub(ctx, resp.Output), nil
+}
+
+func (api *apiContractClient) Finish(ctx context.Context, id drive.ID) (*drive.Contract, error) {
+	out := new(contractResponse)
+	return out.Contract, api.apiHttp().NewRequest("contract/finish").Arguments(id.String()).Exec(ctx, out)
 }
 
 func (api *apiContractClient) apiHttp() *apiHttp {
@@ -57,6 +62,7 @@ type inviteResponse struct {
 
 type contractResponse struct {
 	Contract *drive.Contract
+
 }
 
 type contractLsResponse struct {

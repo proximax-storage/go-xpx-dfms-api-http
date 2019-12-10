@@ -107,6 +107,7 @@ github.com/multiformats/go-multibase v0.0.1/go.mod h1:bja2MqRZ3ggyXtZSEDKpl0uO/g
 github.com/multiformats/go-multihash v0.0.1/go.mod h1:w/5tugSrLEbWqlcgJabL3oHFKTwfvkofsjW2Qa1ct4U=
 github.com/multiformats/go-multihash v0.0.8 h1:wrYcW5yxSi3dU07n5jnuS5PrNwyHy0zRHGVoUugWvXg=
 github.com/multiformats/go-multihash v0.0.8/go.mod h1:YSLudS+Pi8NHE7o6tb3D8vrpKa63epEDmG8nTduyAew=
+github.com/multiformats/go-multihash v0.0.10 h1:lMoNbh2Ssd9PUF74Nz008KGzGPlfeV6wH3rit5IIGCM=
 github.com/multiformats/go-multihash v0.0.10/go.mod h1:YSLudS+Pi8NHE7o6tb3D8vrpKa63epEDmG8nTduyAew=
 github.com/multiformats/go-varint v0.0.1 h1:TR/0rdQtnNxuN2IhiB639xC3tWM4IUi7DkTBVTdGW/M=
 github.com/multiformats/go-varint v0.0.1/go.mod h1:3Ls8CIEsrijN6+B7PbrXRPxHRPuXSrVKRY101jdMZYE=
@@ -122,8 +123,13 @@ github.com/proximax-storage/go-xpx-chain-sdk v0.5.1-0.20191030161647-1b1db9d1dbc
 github.com/proximax-storage/go-xpx-dfms-api v0.1.1-0.20191206111533-1fc9826c81bc h1:v63Y7dKPYK3OFXYqVizgBfteYFCwz0IYnQ038Ws5CjM=
 github.com/proximax-storage/go-xpx-dfms-api v0.1.1-0.20191206111533-1fc9826c81bc/go.mod h1:dm+dKwQUgLPWlIssO3Ts3tkrpWBXjn3eMq6wch3bvK0=
 github.com/proximax-storage/go-xpx-dfms-api v0.1.1/go.mod h1:1vxGS3Dvp3oXgm4/s460Jg7Mha4au78FSF+KSePFoPA=
+github.com/proximax-storage/go-xpx-dfms-api v0.1.2-0.20191210151622-76086800b74d h1:URpFTD6+u08QNKs+iVeZd1pJvhy24NMWm0Tu3WNvLeA=
+github.com/proximax-storage/go-xpx-dfms-api v0.1.2-0.20191210151622-76086800b74d/go.mod h1:1vxGS3Dvp3oXgm4/s460Jg7Mha4au78FSF+KSePFoPA=
+github.com/proximax-storage/go-xpx-dfms-api v0.1.2-0.20191210171619-997e637a4518 h1:YnBmwm3d0GVIIUMAl9dItsrbq4qIAgpbOYN9dt0T1M8=
+github.com/proximax-storage/go-xpx-dfms-api v0.1.2-0.20191210171619-997e637a4518/go.mod h1:1vxGS3Dvp3oXgm4/s460Jg7Mha4au78FSF+KSePFoPA=
 github.com/proximax-storage/go-xpx-dfms-drive v0.1.4-0.20191205103500-20f9798907b6 h1:jV/3ne+QCmbcSK0HbEy/NjvEMPQgdLe5ey4wQdbZ2pk=
 github.com/proximax-storage/go-xpx-dfms-drive v0.1.4-0.20191205103500-20f9798907b6/go.mod h1:e5+Vy8Fn+MzUxCoWSheE4Ikai/QjPYskEnG7DPff6Ak=
+github.com/proximax-storage/go-xpx-dfms-drive v0.2.0 h1:XO1/yfk8bVsZ+AAYAeUyhM4x5ippTopG/a1jL0T22gI=
 github.com/proximax-storage/go-xpx-dfms-drive v0.2.0/go.mod h1:ZBMu3WD0Z+W0keQ65pOeibvNl6iwO+evrudhKhB8c9E=
 github.com/proximax-storage/go-xpx-utils v0.0.0-20190604083640-90d06ff8a19f/go.mod h1:++1dcQ6EiUK6Yqi5al5OO3QXZPR1y9mX03e5O2qawEw=
 github.com/proximax-storage/nem2-sdk-go v0.0.0-20190128134401-f3b97d8c1f63/go.mod h1:bTUWZWtoRHhTTqatPWwFCKNeAFDzA2jbA1kLidM0/Is=
