@@ -62,7 +62,6 @@ type inviteResponse struct {
 
 type contractResponse struct {
 	Contract *drive.Contract
-
 }
 
 type contractLsResponse struct {

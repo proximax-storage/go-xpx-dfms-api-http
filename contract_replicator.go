@@ -38,6 +38,10 @@ func (api *apiContractReplicator) Accepted(ctx context.Context) (api.ContractSub
 	return newContractSub(ctx, resp.Output), nil
 }
 
+func (api *apiContractReplicator) Finish(ctx context.Context, id drive.ID) (*drive.Contract, error) {
+	return api.apiContractClient().Finish(ctx, id)
+}
+
 func (api *apiContractReplicator) Invites(ctx context.Context) (api.InviteSubscription, error) {
 	resp, err := api.apiHttp().NewRequest("contract/invites").Send(ctx)
 	if err != nil {
