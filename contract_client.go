@@ -47,9 +47,8 @@ func (api *apiContractClient) Amendments(ctx context.Context, id drive.ID) (apis
 	return newContractSub(ctx, resp.Output), nil
 }
 
-func (api *apiContractClient) Finish(ctx context.Context, id drive.ID) (*drive.Contract, error) {
-	out := new(contractResponse)
-	return out.Contract, api.apiHttp().NewRequest("contract/finish").Arguments(id.String()).Exec(ctx, out)
+func (api *apiContractClient) Finish(ctx context.Context, id drive.ID) error {
+	return api.apiHttp().NewRequest("contract/finish").Arguments(id.String()).Exec(ctx, nil)
 }
 
 func (api *apiContractClient) apiHttp() *apiHttp {

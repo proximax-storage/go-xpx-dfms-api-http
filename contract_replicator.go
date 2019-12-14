@@ -38,7 +38,7 @@ func (api *apiContractReplicator) Accepted(ctx context.Context) (api.ContractSub
 	return newContractSub(ctx, resp.Output), nil
 }
 
-func (api *apiContractReplicator) Finish(ctx context.Context, id drive.ID) (*drive.Contract, error) {
+func (api *apiContractReplicator) Finish(ctx context.Context, id drive.ID) error {
 	return api.apiContractClient().Finish(ctx, id)
 }
 
