@@ -51,14 +51,6 @@ func (api *apiContractReplicator) Invites(ctx context.Context) (api.InviteSubscr
 	return newInviteSub(ctx, resp.Output), nil
 }
 
-func (api *apiContractReplicator) StartAccepting(ctx context.Context, _ api.AcceptStrategy) error {
-	return api.apiHttp().NewRequest("contract/accepting").Exec(ctx, nil)
-}
-
-func (api *apiContractReplicator) StopAccepting(ctx context.Context) error {
-	return api.apiHttp().NewRequest("contract/accepting").Exec(ctx, nil)
-}
-
 func (api *apiContractReplicator) apiContractClient() *apiContractClient {
 	return (*apiContractClient)(api)
 }
