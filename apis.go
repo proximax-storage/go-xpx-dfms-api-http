@@ -57,3 +57,7 @@ func (r *replicatorAPI) Contract() api.ContractReplicator {
 func (r *replicatorAPI) Network() api.Network {
 	return (*apiNetwork)(r.apiHttp)
 }
+
+func (c *replicatorAPI) Supercontract() api.Supercontract {
+	return (*apiSupercontract)(c.apiHttp)
+}
