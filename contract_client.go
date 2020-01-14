@@ -51,6 +51,11 @@ func (api *apiContractClient) Finish(ctx context.Context, id drive.ID) error {
 	return api.apiHttp().NewRequest("contract/finish").Arguments(id.String()).Exec(ctx, nil)
 }
 
+func (api *apiContractClient) Verify(ctx context.Context, id drive.ID) (apis.VerifyResult, error) {
+	out := new(verifyResponse)
+	return out.Result, api.apiHttp().NewRequest("contract/verify").Arguments(id.String()).Exec(ctx, out)
+}
+
 func (api *apiContractClient) apiHttp() *apiHttp {
 	return (*apiHttp)(api)
 }
@@ -65,4 +70,8 @@ type contractResponse struct {
 
 type contractLsResponse struct {
 	Ids []drive.ID
+}
+
+type verifyResponse struct {
+	Result apis.VerifyResult
 }

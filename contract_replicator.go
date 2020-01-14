@@ -42,6 +42,10 @@ func (api *apiContractReplicator) Finish(ctx context.Context, id drive.ID) error
 	return api.apiContractClient().Finish(ctx, id)
 }
 
+func (api *apiContractReplicator) Verify(ctx context.Context, id drive.ID) (api.VerifyResult, error) {
+	return api.apiContractClient().Verify(ctx, id)
+}
+
 func (api *apiContractReplicator) Invites(ctx context.Context) (api.InviteSubscription, error) {
 	resp, err := api.apiHttp().NewRequest("contract/invites").Send(ctx)
 	if err != nil {
@@ -49,14 +53,6 @@ func (api *apiContractReplicator) Invites(ctx context.Context) (api.InviteSubscr
 	}
 
 	return newInviteSub(ctx, resp.Output), nil
-}
-
-func (api *apiContractReplicator) StartAccepting(ctx context.Context, _ api.AcceptStrategy) error {
-	return api.apiHttp().NewRequest("contract/accepting").Exec(ctx, nil)
-}
-
-func (api *apiContractReplicator) StopAccepting(ctx context.Context) error {
-	return api.apiHttp().NewRequest("contract/accepting").Exec(ctx, nil)
 }
 
 func (api *apiContractReplicator) apiContractClient() *apiContractClient {
