@@ -91,7 +91,7 @@ func (api *apiDriveFS) MakeDir(ctx context.Context, id drive.ID, path string, op
 	return api.apiHttp().NewRequest("drive/mkdir").
 		Arguments(id.String()).
 		Arguments(path).
-		Option("flush", opt).
+		Option("flush", opt.Flush).
 		Exec(ctx, nil)
 }
 
