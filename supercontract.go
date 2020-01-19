@@ -3,21 +3,18 @@ package apihttp
 import (
 	"context"
 
-	"github.com/ipfs/go-cid"
-
 	"github.com/proximax-storage/go-xpx-dfms-drive"
 )
 
-type apiSupercontract apiHttp
+type apiSuperContract apiHttp
 
-func (api *apiSupercontract) Deploy(ctx context.Context, id drive.ID, file cid.Cid, functions []string) error {
-	return api.apiHttp().NewRequest("supecontract/deploy").
+func (api *apiSuperContract) Deploy(ctx context.Context, id drive.ID, file string) error {
+	return api.apiHttp().NewRequest("supercontract/deploy").
 		Arguments(id.String()).
-		Arguments(file.String()).
-		Arguments(functions...).
+		Arguments(file).
 		Exec(ctx, nil)
 }
 
-func (api *apiSupercontract) apiHttp() *apiHttp {
+func (api *apiSuperContract) apiHttp() *apiHttp {
 	return (*apiHttp)(api)
 }

@@ -32,8 +32,8 @@ func (c *clientAPI) Network() api.Network {
 	return (*apiNetwork)(c.apiHttp)
 }
 
-func (c *clientAPI) Supercontract() api.Supercontract {
-	return (*apiSupercontract)(c.apiHttp)
+func (c *clientAPI) SuperContract() api.SuperContract {
+	return (*apiSuperContract)(c.apiHttp)
 }
 
 type replicatorAPI struct {
@@ -56,8 +56,4 @@ func (r *replicatorAPI) Contract() api.ContractReplicator {
 
 func (r *replicatorAPI) Network() api.Network {
 	return (*apiNetwork)(r.apiHttp)
-}
-
-func (c *replicatorAPI) Supercontract() api.Supercontract {
-	return (*apiSupercontract)(c.apiHttp)
 }
