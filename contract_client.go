@@ -11,11 +11,11 @@ import (
 type apiContractClient apiHttp
 
 func (api *apiContractClient) Compose(ctx context.Context, space, duration uint64, opts ...apis.ComposeOpt) (*drive.Contract, error) {
-	var options apis.ComposeOpts
-
-	if err := options.Apply(opts...); err != nil {
+	options, err := apis.Apply(space, duration, opts...)
+	if err != nil {
 		return nil, err
 	}
+
 	out := new(contractResponse)
 	return out.Contract, api.apiHttp().NewRequest("contract/compose").
 		Arguments(fmt.Sprintf("%d", space)).
