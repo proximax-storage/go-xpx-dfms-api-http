@@ -11,7 +11,7 @@ import (
 type apiContractClient apiHttp
 
 func (api *apiContractClient) Compose(ctx context.Context, space, duration uint64, opts ...apis.ComposeOpt) (*drive.Contract, error) {
-	options, err := apis.Apply(space, duration, opts...)
+	options, err := apis.Parse(space, duration, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -25,6 +25,7 @@ func (api *apiContractClient) Compose(ctx context.Context, space, duration uint6
 		Option("billing-price", options.BillingPrice).
 		Option("billing-period", options.BillingPeriod).
 		Option("percent-approvers", options.PercentApprovers).
+		Option("private-key", options.PrivateKey).
 		Exec(ctx, out)
 }
 
