@@ -2,8 +2,10 @@ package apihttp
 
 import (
 	"context"
+	"encoding/hex"
 	"fmt"
 
+	"github.com/libp2p/go-libp2p-core/crypto"
 	apis "github.com/proximax-storage/go-xpx-dfms-api"
 	"github.com/proximax-storage/go-xpx-dfms-drive"
 )
@@ -12,6 +14,11 @@ type apiContractClient apiHttp
 
 func (api *apiContractClient) Compose(ctx context.Context, space, duration uint64, opts ...apis.ComposeOpt) (*drive.Contract, error) {
 	options, err := apis.Parse(space, duration, opts...)
+	if err != nil {
+		return nil, err
+	}
+
+	bytePK, err := crypto.MarshalPrivateKey(options.PrivateKey)
 	if err != nil {
 		return nil, err
 	}
@@ -25,7 +32,7 @@ func (api *apiContractClient) Compose(ctx context.Context, space, duration uint6
 		Option("billing-price", options.BillingPrice).
 		Option("billing-period", options.BillingPeriod).
 		Option("percent-approvers", options.PercentApprovers).
-		Option("private-key", options.PrivateKey).
+		Option("private-key", hex.EncodeToString(bytePK)).
 		Exec(ctx, out)
 }
 
