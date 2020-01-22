@@ -18,9 +18,14 @@ func (api *apiContractClient) Compose(ctx context.Context, space, duration uint6
 		return nil, err
 	}
 
-	bytePK, err := crypto.MarshalPrivateKey(options.PrivateKey)
-	if err != nil {
-		return nil, err
+	var keyString string
+	if options.PrivateKey != nil {
+		bytePK, err := crypto.MarshalPrivateKey(options.PrivateKey)
+		if err != nil {
+			return nil, err
+		}
+
+		keyString = hex.EncodeToString(bytePK)
 	}
 
 	out := new(contractResponse)
@@ -32,7 +37,7 @@ func (api *apiContractClient) Compose(ctx context.Context, space, duration uint6
 		Option("billing-price", options.BillingPrice).
 		Option("billing-period", options.BillingPeriod).
 		Option("percent-approvers", options.PercentApprovers).
-		Option("private-key", hex.EncodeToString(bytePK)).
+		Option("private-key", keyString).
 		Exec(ctx, out)
 }
 
