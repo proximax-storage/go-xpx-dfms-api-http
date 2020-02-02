@@ -19,36 +19,40 @@ type scContractResponse struct {
 }
 
 func (api *apiSuperContract) Deploy(ctx context.Context, id drive.ID, file string) error {
-	return api.apiHttp().NewRequest("supercontract/deploy").
+	return api.apiHttp().
+		NewRequest("supercontract/deploy").
 		Arguments(id.String()).
 		Arguments(file).
 		Exec(ctx, nil)
 }
 
-func (api *apiSuperContract) Execute(ctx context.Context, id sc.ID, gas uint64, function string, functionParams []int64) error {
+func (api *apiSuperContract) Execute(ctx context.Context, id sc.ID, gas uint64, function sc.Function) error {
 	var funcParams []string
-	for _, param := range functionParams {
+	for _, param := range function.Parameters {
 		funcParams = append(funcParams, fmt.Sprintf("%d", param))
 	}
 
-	return api.apiHttp().NewRequest("supercontract/execute").
+	return api.apiHttp().
+		NewRequest("supercontract/execute").
 		Arguments(id.String()).
 		Arguments(fmt.Sprintf("%d", gas)).
-		Arguments(function).
+		Arguments(function.Name).
 		Arguments(funcParams...).
 		Exec(ctx, nil)
 }
 
-func (api *apiSuperContract) GetSuperContract(ctx context.Context, id sc.ID) (*sc.SuperContract, error) {
+func (api *apiSuperContract) Get(ctx context.Context, id sc.ID) (*sc.SuperContract, error) {
 	out := new(scContractResponse)
-	return out.Contract, api.apiHttp().NewRequest("supercontract/get").
+	return out.Contract, api.apiHttp().
+		NewRequest("supercontract/get").
 		Arguments(id.String()).
 		Exec(ctx, out)
 }
 
 func (api *apiSuperContract) List(ctx context.Context, id drive.ID) ([]sc.ID, error) {
 	out := new(scContractLsResponse)
-	return out.Ids, api.apiHttp().NewRequest("supercontract/ls").
+	return out.Ids, api.apiHttp().
+		NewRequest("supercontract/ls").
 		Arguments(id.String()).
 		Exec(ctx, out)
 }

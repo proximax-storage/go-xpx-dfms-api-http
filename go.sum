@@ -154,6 +154,8 @@ github.com/proximax-storage/go-xpx-dfms-api v0.1.2-0.20200120115011-1a3887b52d96
 github.com/proximax-storage/go-xpx-dfms-api v0.1.2-0.20200120115011-1a3887b52d96/go.mod h1:AueCbLEkakyugzy8Qrpv4TgI68FLVz82bWnt9asmnMM=
 github.com/proximax-storage/go-xpx-dfms-api v0.1.2-0.20200128152859-7dca8ceecbcb h1:l6fDr82MsA11eZ8Zh62lsRwlz7qoUK90gGcLTcECpZA=
 github.com/proximax-storage/go-xpx-dfms-api v0.1.2-0.20200128152859-7dca8ceecbcb/go.mod h1:2uKege/xUvhjtg9W0f/S85kwhsozPJPKGxZQiHtLB7k=
+github.com/proximax-storage/go-xpx-dfms-api v0.1.2-0.20200129100611-f2bb6a7ce6f7 h1:MKyU5pjLxWNzpIYdKNIxevC26TmIbSvpE40DN1eFAqk=
+github.com/proximax-storage/go-xpx-dfms-api v0.1.2-0.20200129100611-f2bb6a7ce6f7/go.mod h1:2uKege/xUvhjtg9W0f/S85kwhsozPJPKGxZQiHtLB7k=
 github.com/proximax-storage/go-xpx-dfms-drive v0.1.4-0.20191205103500-20f9798907b6 h1:jV/3ne+QCmbcSK0HbEy/NjvEMPQgdLe5ey4wQdbZ2pk=
 github.com/proximax-storage/go-xpx-dfms-drive v0.1.4-0.20191205103500-20f9798907b6/go.mod h1:e5+Vy8Fn+MzUxCoWSheE4Ikai/QjPYskEnG7DPff6Ak=
 github.com/proximax-storage/go-xpx-dfms-drive v0.2.0 h1:XO1/yfk8bVsZ+AAYAeUyhM4x5ippTopG/a1jL0T22gI=
