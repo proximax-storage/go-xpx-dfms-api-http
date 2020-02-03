@@ -35,8 +35,8 @@ func (api *apiContractClient) Compose(ctx context.Context, space uint64, subPeri
 		Arguments(fmt.Sprintf("%d", subPeriod)).
 		Option("replicas", options.Replicas).
 		Option("min-replicators", options.MinReplicators).
-		Option("billing-price", options.BillingPrice).
-		Option("number-billing-periods", options.NumberBillingPeriods).
+		Option("subscription-price", options.SubscriptionPrice).
+		Option("number-subscription-periods", options.NumberSubscriptionPeriods).
 		Option("percent-approvers", options.PercentApprovers).
 		Option("private-key", keyString).
 		Exec(ctx, out)
