@@ -18,12 +18,13 @@ type scContractResponse struct {
 	Contract *sc.SuperContract
 }
 
-func (api *apiSuperContract) Deploy(ctx context.Context, id drive.ID, file string) error {
-	return api.apiHttp().
+func (api *apiSuperContract) Deploy(ctx context.Context, id drive.ID, file string) (sc.ID, error) {
+	out := new(sc.ID)
+	return *out, api.apiHttp().
 		NewRequest("supercontract/deploy").
 		Arguments(id.String()).
 		Arguments(file).
-		Exec(ctx, nil)
+		Exec(ctx, out)
 }
 
 func (api *apiSuperContract) Execute(ctx context.Context, id sc.ID, gas uint64, function sc.Function) error {
