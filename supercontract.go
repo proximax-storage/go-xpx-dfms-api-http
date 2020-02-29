@@ -19,6 +19,10 @@ type scContractResultsResponse struct {
 	Res []string
 }
 
+type scExecutionsResponse struct {
+	Ids []cid.Cid
+}
+
 type scContractResponse struct {
 	Contract *sc.SuperContract
 }
@@ -67,6 +71,14 @@ func (api *apiSuperContract) GetResults(ctx context.Context, id cid.Cid) ([]stri
 	out := new(scContractResultsResponse)
 	return out.Res, api.apiHttp().
 		NewRequest("supercontract/results").
+		Arguments(id.String()).
+		Exec(ctx, out)
+}
+
+func (api *apiSuperContract) GetSuperContractExecutionsHash(ctx context.Context, id sc.ID) ([]cid.Cid, error) {
+	out := new(scExecutionsResponse)
+	return out.Ids, api.apiHttp().
+		NewRequest("supercontract/executions").
 		Arguments(id.String()).
 		Exec(ctx, out)
 }
