@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/ipfs/go-cid"
 	"github.com/proximax-storage/go-xpx-dfms-drive"
 	sc "github.com/proximax-storage/go-xpx-dfms-drive/supercontract"
 )
@@ -12,6 +13,10 @@ type apiSuperContract apiHttp
 
 type scContractLsResponse struct {
 	Ids []sc.ID
+}
+
+type scContractResultsResponse struct {
+	Res []string
 }
 
 type scContractResponse struct {
@@ -54,6 +59,14 @@ func (api *apiSuperContract) List(ctx context.Context, id drive.ID) ([]sc.ID, er
 	out := new(scContractLsResponse)
 	return out.Ids, api.apiHttp().
 		NewRequest("supercontract/ls").
+		Arguments(id.String()).
+		Exec(ctx, out)
+}
+
+func (api *apiSuperContract) GetResults(ctx context.Context, id cid.Cid) ([]string, error) {
+	out := new(scContractResultsResponse)
+	return out.Res, api.apiHttp().
+		NewRequest("supercontract/results").
 		Arguments(id.String()).
 		Exec(ctx, out)
 }
