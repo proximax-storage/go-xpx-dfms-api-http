@@ -36,19 +36,20 @@ func (api *apiSuperContract) Deploy(ctx context.Context, id drive.ID, file strin
 		Exec(ctx, out)
 }
 
-func (api *apiSuperContract) Execute(ctx context.Context, id sc.ID, gas uint64, function sc.Function) error {
+func (api *apiSuperContract) Execute(ctx context.Context, id sc.ID, gas uint64, function sc.Function) (cid.Cid, error) {
 	var funcParams []string
 	for _, param := range function.Parameters {
 		funcParams = append(funcParams, fmt.Sprintf("%d", param))
 	}
 
-	return api.apiHttp().
+	var out cid.Cid
+	return out, api.apiHttp().
 		NewRequest("supercontract/execute").
 		Arguments(id.String()).
 		Arguments(fmt.Sprintf("%d", gas)).
 		Arguments(function.Name).
 		Arguments(funcParams...).
-		Exec(ctx, nil)
+		Exec(ctx, out)
 }
 
 func (api *apiSuperContract) Get(ctx context.Context, id sc.ID) (*sc.SuperContract, error) {
