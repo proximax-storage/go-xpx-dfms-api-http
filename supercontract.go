@@ -76,12 +76,19 @@ func (api *apiSuperContract) GetResults(ctx context.Context, id cid.Cid) ([]stri
 		Exec(ctx, out)
 }
 
-func (api *apiSuperContract) GetSuperContractExecutionsHash(ctx context.Context, id sc.ID) ([]cid.Cid, error) {
+func (api *apiSuperContract) GetSuperContractExecutionsHashes(ctx context.Context, id sc.ID) ([]cid.Cid, error) {
 	out := new(scExecutionsResponse)
 	return out.Ids, api.apiHttp().
 		NewRequest("supercontract/executions").
 		Arguments(id.String()).
 		Exec(ctx, out)
+}
+
+func (api *apiSuperContract) Deactivate(ctx context.Context, id sc.ID) error {
+	return api.apiHttp().
+		NewRequest("supercontract/deactivate").
+		Arguments(id.String()).
+		Exec(ctx, nil)
 }
 
 func (api *apiSuperContract) apiHttp() *apiHttp {
