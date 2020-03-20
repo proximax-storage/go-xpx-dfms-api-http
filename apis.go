@@ -32,6 +32,10 @@ func (c *clientAPI) Network() api.Network {
 	return (*apiNetwork)(c.apiHttp)
 }
 
+func (c *clientAPI) SuperContract() api.SuperContract {
+	return (*apiSuperContract)(c.apiHttp)
+}
+
 type replicatorAPI struct {
 	*apiHttp
 }
