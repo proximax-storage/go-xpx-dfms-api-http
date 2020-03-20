@@ -2,6 +2,7 @@ package apihttp
 
 import (
 	"context"
+	"time"
 
 	"github.com/proximax-storage/go-xpx-dfms-api"
 	"github.com/proximax-storage/go-xpx-dfms-drive"
@@ -9,8 +10,8 @@ import (
 
 type apiContractReplicator apiHttp
 
-func (api *apiContractReplicator) Compose(ctx context.Context, space, duration uint64, opts ...api.ComposeOpt) (*drive.Contract, error) {
-	return api.apiContractClient().Compose(ctx, space, duration, opts...)
+func (api *apiContractReplicator) Compose(ctx context.Context, space uint64, subPeriod time.Duration, opts ...api.ComposeOpt) (*drive.Contract, error) {
+	return api.apiContractClient().Compose(ctx, space, subPeriod, opts...)
 }
 
 func (api *apiContractReplicator) List(ctx context.Context) ([]drive.ID, error) {

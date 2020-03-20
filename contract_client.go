@@ -2,29 +2,43 @@ package apihttp
 
 import (
 	"context"
+	"encoding/hex"
 	"fmt"
+	"time"
 
+	"github.com/libp2p/go-libp2p-core/crypto"
 	apis "github.com/proximax-storage/go-xpx-dfms-api"
 	"github.com/proximax-storage/go-xpx-dfms-drive"
 )
 
 type apiContractClient apiHttp
 
-func (api *apiContractClient) Compose(ctx context.Context, space, duration uint64, opts ...apis.ComposeOpt) (*drive.Contract, error) {
-	var options apis.ComposeOpts
-
-	if err := options.Apply(opts...); err != nil {
+func (api *apiContractClient) Compose(ctx context.Context, space uint64, subPeriod time.Duration, opts ...apis.ComposeOpt) (*drive.Contract, error) {
+	options, err := apis.Parse(space, subPeriod, opts...)
+	if err != nil {
 		return nil, err
 	}
+
+	var keyString string
+	if options.PrivateKey != nil {
+		bytePK, err := crypto.MarshalPrivateKey(options.PrivateKey)
+		if err != nil {
+			return nil, err
+		}
+
+		keyString = hex.EncodeToString(bytePK)
+	}
+
 	out := new(contractResponse)
 	return out.Contract, api.apiHttp().NewRequest("contract/compose").
 		Arguments(fmt.Sprintf("%d", space)).
-		Arguments(fmt.Sprintf("%d", duration)).
+		Arguments(fmt.Sprintf("%d", subPeriod)).
 		Option("replicas", options.Replicas).
 		Option("min-replicators", options.MinReplicators).
-		Option("billing-price", options.BillingPrice).
-		Option("billing-period", options.BillingPeriod).
+		Option("subscription-price", options.SubscriptionPrice).
+		Option("number-subscription-periods", options.NumberSubscriptionPeriods).
 		Option("percent-approvers", options.PercentApprovers).
+		Option("private-key", keyString).
 		Exec(ctx, out)
 }
 
