@@ -11,12 +11,21 @@ import (
 
 type apiSuperContract apiHttp
 
+type scDeployResponse struct {
+	Result sc.ID
+}
+
+type scExecuteResponse struct {
+	ScId   string
+	TxHash cid.Cid
+}
+
 type scContractLsResponse struct {
 	Ids []sc.ID
 }
 
 type scContractResultsResponse struct {
-	Res []string
+	Results []string
 }
 
 type scExecutionsResponse struct {
@@ -24,12 +33,12 @@ type scExecutionsResponse struct {
 }
 
 type scContractResponse struct {
-	Contract *sc.SuperContract
+	SuperContract *sc.SuperContract
 }
 
 func (api *apiSuperContract) Deploy(ctx context.Context, id drive.ID, file string) (sc.ID, error) {
-	out := new(sc.ID)
-	return *out, api.apiHttp().
+	out := new(scDeployResponse)
+	return out.Result, api.apiHttp().
 		NewRequest("sc/deploy").
 		Arguments(id.String()).
 		Arguments(file).
@@ -42,8 +51,8 @@ func (api *apiSuperContract) Execute(ctx context.Context, id sc.ID, gas uint64, 
 		funcParams = append(funcParams, fmt.Sprintf("%d", param))
 	}
 
-	var out cid.Cid
-	return out, api.apiHttp().
+	out := new(scExecuteResponse)
+	return out.TxHash, api.apiHttp().
 		NewRequest("sc/exec").
 		Arguments(id.String()).
 		Arguments(fmt.Sprintf("%d", gas)).
@@ -54,7 +63,7 @@ func (api *apiSuperContract) Execute(ctx context.Context, id sc.ID, gas uint64, 
 
 func (api *apiSuperContract) Get(ctx context.Context, id sc.ID) (*sc.SuperContract, error) {
 	out := new(scContractResponse)
-	return out.Contract, api.apiHttp().
+	return out.SuperContract, api.apiHttp().
 		NewRequest("sc/get").
 		Arguments(id.String()).
 		Exec(ctx, out)
@@ -70,7 +79,7 @@ func (api *apiSuperContract) List(ctx context.Context, id drive.ID) ([]sc.ID, er
 
 func (api *apiSuperContract) GetResults(ctx context.Context, id cid.Cid) ([]string, error) {
 	out := new(scContractResultsResponse)
-	return out.Res, api.apiHttp().
+	return out.Results, api.apiHttp().
 		NewRequest("sc/results").
 		Arguments(id.String()).
 		Exec(ctx, out)
