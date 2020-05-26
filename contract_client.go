@@ -32,7 +32,7 @@ func (api *apiContractClient) Compose(ctx context.Context, space uint64, subPeri
 	out := new(contractResponse)
 	return out.Contract, api.apiHttp().NewRequest("contract/compose").
 		Arguments(fmt.Sprintf("%d", space)).
-		Arguments(fmt.Sprintf("%d", subPeriod)).
+		Arguments(subPeriod.String()).
 		Option("replicas", options.Replicas).
 		Option("min-replicators", options.MinReplicators).
 		Option("subscription-price", options.SubscriptionPrice).
