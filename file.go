@@ -28,13 +28,7 @@ func (api *apiDriveFS) newFile(ctx context.Context, id drive.ID, path string) (f
 		return nil, err
 	}
 
-	r := tar.NewReader(resp.Output)
-	header, err := r.Next()
-	if err != nil && err != io.EOF {
-		return nil, err
-	}
-
-	return files.NewReaderStatFile(r, header.FileInfo()), nil
+	return fileFromResp(resp)
 }
 
 func (api *apiDriveFS) newDir(ctx context.Context, id drive.ID, path string, size int64) (files.Directory, error) {
@@ -128,4 +122,14 @@ func (di *dirIter) Next() bool {
 
 func (di *dirIter) current() os.FileInfo {
 	return di.infos[di.i]
+}
+
+func fileFromResp(resp *Response) (files.File, error) {
+	r := tar.NewReader(resp.Output)
+	header, err := r.Next()
+	if err != nil && err != io.EOF {
+		return nil, err
+	}
+
+	return files.NewReaderStatFile(r, header.FileInfo()), nil
 }

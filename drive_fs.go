@@ -49,6 +49,20 @@ func (api *apiDriveFS) Get(ctx context.Context, id drive.ID, path string, opts .
 	return api.newNode(ctx, id, path, info)
 }
 
+// FIXME Currently, directories are not supported and the name is empty.
+// File gets the file from the Drive by given cid.
+func (api *apiDriveFS) File(ctx context.Context, id drive.ID, cid cid.Cid, opts ...iapi.DriveOption) (files.Node, error) {
+	resp, err := api.apiHttp().NewRequest("drive/file").
+		Arguments(id.String()).
+		Arguments(cid.String()).
+		Send(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return fileFromResp(resp)
+}
+
 // Remove removes reference of the file at a given path from a specific Drive.
 // TODO Add options to allow full remove
 func (api *apiDriveFS) Remove(ctx context.Context, id drive.ID, path string, opts ...iapi.DriveOption) error {
