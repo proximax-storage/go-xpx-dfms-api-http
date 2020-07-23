@@ -2,11 +2,9 @@ package apihttp
 
 import (
 	"context"
-	"encoding/hex"
 	"fmt"
 	"time"
 
-	"github.com/libp2p/go-libp2p-core/crypto"
 	apis "github.com/proximax-storage/go-xpx-dfms-api"
 	"github.com/proximax-storage/go-xpx-dfms-drive"
 )
@@ -19,14 +17,8 @@ func (api *apiContractClient) Compose(ctx context.Context, space uint64, subPeri
 		return nil, err
 	}
 
-	var keyString string
 	if options.PrivateKey != nil {
-		bytePK, err := crypto.MarshalPrivateKey(options.PrivateKey)
-		if err != nil {
-			return nil, err
-		}
-
-		keyString = hex.EncodeToString(bytePK)
+		return nil, fmt.Errorf("can't use custom PrivateKey in HTTP API") // for security reasons.
 	}
 
 	out := new(contractResponse)
@@ -38,7 +30,6 @@ func (api *apiContractClient) Compose(ctx context.Context, space uint64, subPeri
 		Option("subscription-price", options.SubscriptionPrice).
 		Option("number-subscription-periods", options.NumberSubscriptionPeriods).
 		Option("percent-approvers", options.PercentApprovers).
-		Option("private-key", keyString).
 		Exec(ctx, out)
 }
 
