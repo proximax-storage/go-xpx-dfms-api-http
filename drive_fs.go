@@ -64,13 +64,12 @@ func (api *apiDriveFS) File(ctx context.Context, id drive.ID, cid cid.Cid, opts 
 }
 
 // Remove removes reference of the file at a given path from a specific Drive.
-// TODO Add options to allow full remove
+// If there are no more references then removes the file locally
 func (api *apiDriveFS) Remove(ctx context.Context, id drive.ID, path string, opts ...iapi.DriveOption) error {
 	opt := iapi.ParseDriveOptions(opts...)
 	return api.apiHttp().NewRequest("drive/rm").
 		Arguments(id.String()).
 		Arguments(path).
-		Option("local", opt.Local).
 		Option("flush", opt.Flush).
 		Exec(ctx, nil)
 }
@@ -136,6 +135,12 @@ func (api *apiDriveFS) Stat(ctx context.Context, id drive.ID, path string) (os.F
 func (api *apiDriveFS) Flush(ctx context.Context, id drive.ID) error {
 	return api.apiHttp().NewRequest("drive/flush").
 		Arguments(id.String()).
+		Exec(ctx, nil)
+}
+
+// Clear clears all files locally
+func (api *apiDriveFS) Clear(ctx context.Context, opts ...iapi.DriveOption) error {
+	return api.apiHttp().NewRequest("drive/clear").
 		Exec(ctx, nil)
 }
 
