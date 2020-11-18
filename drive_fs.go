@@ -64,7 +64,7 @@ func (api *apiDriveFS) File(ctx context.Context, id drive.ID, cid cid.Cid, opts 
 }
 
 // Remove removes reference of the file at a given path from a specific Drive.
-// If there are no more references then removes the file locally
+// If the file is cached and no more references left it clears the cache.
 func (api *apiDriveFS) Remove(ctx context.Context, id drive.ID, path string, opts ...iapi.DriveOption) error {
 	opt := iapi.ParseDriveOptions(opts...)
 	return api.apiHttp().NewRequest("drive/rm").
