@@ -8,6 +8,6 @@ require (
 	github.com/ipfs/go-ipfs-files v0.0.8
 	github.com/libp2p/go-libp2p-core v0.6.0
 	github.com/multiformats/go-multiaddr v0.2.2
-	github.com/proximax-storage/go-xpx-dfms-api v0.3.1-0.20201117153129-bd0163029828
+	github.com/proximax-storage/go-xpx-dfms-api v0.3.1-0.20201124090302-063dea8af02e
 	github.com/proximax-storage/go-xpx-dfms-drive v0.2.1-0.20200128151550-5d6565ba489f
 )
