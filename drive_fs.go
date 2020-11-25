@@ -138,9 +138,10 @@ func (api *apiDriveFS) Flush(ctx context.Context, id drive.ID) error {
 		Exec(ctx, nil)
 }
 
-// Clear clears all files locally
-func (api *apiDriveFS) Clear(ctx context.Context, opts ...iapi.DriveOption) error {
+// Clear clears all drive files locally
+func (api *apiDriveFS) Clear(ctx context.Context, id drive.ID, opts ...iapi.DriveOption) error {
 	return api.apiHttp().NewRequest("drive/clear").
+		Arguments(id.String()).
 		Exec(ctx, nil)
 }
 
