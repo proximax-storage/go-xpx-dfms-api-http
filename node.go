@@ -29,7 +29,7 @@ func (n *node) Type() api.NodeType {
 	return n.tp
 }
 
-func (n *node) Version(ctx context.Context) (*api.Versions, error) {
-	out := new(api.Versions)
+func (n *node) Version(ctx context.Context) (api.Version, error) {
+	out := api.Version{}
 	return out, n.apiHttp.NewRequest("version").Exec(ctx, &out)
 }

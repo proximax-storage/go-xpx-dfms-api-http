@@ -10,7 +10,7 @@ type clientAPI struct {
 	*node
 }
 
-// NewNewClientAPI creates new api.Client from given address and default http.Client
+// NewClientAPI creates new api.Client from given address and default http.Client
 func NewClientAPI(address string) api.Client {
 	return NewCustomClientAPI(address, http.DefaultClient)
 }
