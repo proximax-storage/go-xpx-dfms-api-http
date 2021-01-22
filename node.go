@@ -9,7 +9,7 @@ import (
 
 type node struct {
 	*apiHttp
-
+	lr api.Ledger
 	tp api.NodeType
 }
 
@@ -19,6 +19,10 @@ func newNodeAPI(address string, client *http.Client, tp api.NodeType) *node {
 		apiHttp: newHTTP(address, client),
 		tp:      tp,
 	}
+}
+
+func (n *node) Ledger() api.Ledger {
+	return n.lr
 }
 
 func (n *node) Network() api.Network {
