@@ -7,53 +7,45 @@ import (
 )
 
 type clientAPI struct {
-	*apiHttp
+	*node
 }
 
-// New creates new apiHttp.Client from given address and default http.Client
+// NewClientAPI creates new api.Client from given address and default http.Client
 func NewClientAPI(address string) api.Client {
-	return &clientAPI{newHTTP(address, http.DefaultClient)}
+	return NewCustomClientAPI(address, http.DefaultClient)
 }
 
-// NewCustomClientAPI creates new apiHttp.Client from given address and custom http.Client
+// NewCustomClientAPI creates new api.Client from given address and custom http.Client
 func NewCustomClientAPI(address string, client *http.Client) api.Client {
-	return &clientAPI{newHTTP(address, client)}
+	return &clientAPI{newNodeAPI(address, client, api.ClientType)}
 }
 
 func (c *clientAPI) Contract() api.ContractClient {
-	return (*apiContractClient)(c.apiHttp)
+	return (*apiContractClient)(c.node.apiHttp)
 }
 
 func (c *clientAPI) FS() api.DriveFS {
-	return (*apiDriveFS)(c.apiHttp)
-}
-
-func (c *clientAPI) Network() api.Network {
-	return (*apiNetwork)(c.apiHttp)
+	return (*apiDriveFS)(c.node.apiHttp)
 }
 
 func (c *clientAPI) SuperContract() api.SuperContract {
-	return (*apiSuperContract)(c.apiHttp)
+	return (*apiSuperContract)(c.node.apiHttp)
 }
 
 type replicatorAPI struct {
-	*apiHttp
+	*node
 }
 
-// NewReplicatorAPI creates new api.Client from given address and default http.Client
+// NewReplicatorAPI creates new api.Replicator from given address and default http.Client
 func NewReplicatorAPI(address string) api.Replicator {
-	return &replicatorAPI{newHTTP(address, http.DefaultClient)}
+	return NewCustomReplicatorAPI(address, http.DefaultClient)
 }
 
-// NewCustomReplicatorAPI creates new api.Client from given address and custom http.Client
+// NewCustomReplicatorAPI creates new api.Replicator from given address and custom http.Client
 func NewCustomReplicatorAPI(address string, client *http.Client) api.Replicator {
-	return &replicatorAPI{newHTTP(address, client)}
+	return &replicatorAPI{newNodeAPI(address, client, api.ReplicatorType)}
 }
 
 func (r *replicatorAPI) Contract() api.ContractReplicator {
-	return (*apiContractReplicator)(r.apiHttp)
-}
-
-func (r *replicatorAPI) Network() api.Network {
-	return (*apiNetwork)(r.apiHttp)
+	return (*apiContractReplicator)(r.node.apiHttp)
 }
