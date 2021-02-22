@@ -23,6 +23,10 @@ func newNodeAPI(address string, token api.AccessToken, client *http.Client, tp a
 	}
 }
 
+func (n *node) Ledger() api.Ledger {
+	return (*apiLedger)(n.apiHttp)
+}
+
 func (n *node) Network() api.Network {
 	return (*apiNetwork)(n.apiHttp)
 }
