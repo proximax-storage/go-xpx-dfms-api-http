@@ -12,12 +12,17 @@ type clientAPI struct {
 
 // NewClientAPI creates new api.Client from given address and default http.Client
 func NewClientAPI(address string) api.Client {
-	return NewCustomClientAPI(address, http.DefaultClient)
+	return NewCustomClientAPI(address, nil, http.DefaultClient)
+}
+
+// NewClientWithToken creates new api.Client from given address, token and default http.Client
+func NewClientAPIWithToken(address string, token api.AccessToken) api.Client {
+	return NewCustomClientAPI(address, token, http.DefaultClient)
 }
 
 // NewCustomClientAPI creates new api.Client from given address and custom http.Client
-func NewCustomClientAPI(address string, client *http.Client) api.Client {
-	return &clientAPI{newNodeAPI(address, client, api.ClientType)}
+func NewCustomClientAPI(address string, token api.AccessToken, client *http.Client) api.Client {
+	return &clientAPI{newNodeAPI(address, token, client, api.ClientType)}
 }
 
 func (c *clientAPI) Contract() api.ContractClient {
@@ -38,12 +43,17 @@ type replicatorAPI struct {
 
 // NewReplicatorAPI creates new api.Replicator from given address and default http.Client
 func NewReplicatorAPI(address string) api.Replicator {
-	return NewCustomReplicatorAPI(address, http.DefaultClient)
+	return NewCustomReplicatorAPI(address, nil, http.DefaultClient)
+}
+
+// NewReplicatorAPI creates new api.Replicator from given address and default http.Client
+func NewReplicatorAPIWithToken(address string, token api.AccessToken) api.Replicator {
+	return NewCustomReplicatorAPI(address, token, http.DefaultClient)
 }
 
 // NewCustomReplicatorAPI creates new api.Replicator from given address and custom http.Client
-func NewCustomReplicatorAPI(address string, client *http.Client) api.Replicator {
-	return &replicatorAPI{newNodeAPI(address, client, api.ReplicatorType)}
+func NewCustomReplicatorAPI(address string, token api.AccessToken, client *http.Client) api.Replicator {
+	return &replicatorAPI{newNodeAPI(address, token, client, api.ReplicatorType)}
 }
 
 func (r *replicatorAPI) Contract() api.ContractReplicator {
