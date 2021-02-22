@@ -2,6 +2,8 @@ package apihttp
 
 import (
 	"net/http"
+
+	api "github.com/proximax-storage/go-xpx-dfms-api"
 )
 
 var (
@@ -10,14 +12,16 @@ var (
 
 type apiHttp struct {
 	address string
+	token   api.AccessToken
 	http    http.Client
 
 	Headers http.Header
 }
 
-func newHTTP(address string, http *http.Client) *apiHttp {
+func newHTTP(address string, token api.AccessToken, http *http.Client) *apiHttp {
 	return &apiHttp{
 		address: address,
+		token:   token,
 		http:    *http,
 		Headers: make(map[string][]string),
 	}
@@ -32,9 +36,15 @@ func (c *apiHttp) NewRequest(command string) RequestBuilder {
 		}
 	}
 
-	return &requestBuilder{
+	rb := &requestBuilder{
 		command: command,
 		client:  c,
 		headers: headers,
 	}
+
+	if c.token != nil {
+		return rb.Option("token", string(c.token))
+	}
+
+	return rb
 }
